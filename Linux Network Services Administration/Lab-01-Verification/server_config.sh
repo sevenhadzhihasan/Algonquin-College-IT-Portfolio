@@ -20,6 +20,7 @@ echo -e "\n--- User Account Check ---"
 id cst8246
 echo -e "\n--- Detected Ethernet Hardware (Kernel) ---"
 lspci | grep -i ethernet
+
 echo -e "\n[2. NETWORK SERVICES & FIREWALL STATUS]"
 echo "$LINE"
 echo "NetworkManager Active Status  : $(systemctl is-active NetworkManager)"
