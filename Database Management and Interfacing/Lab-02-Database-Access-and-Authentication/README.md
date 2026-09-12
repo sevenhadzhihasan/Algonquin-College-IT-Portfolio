@@ -35,6 +35,7 @@ exit
 Utilized the new alternative database administrative credentials (`dbadmin`) to securely spin up a non-superuser account linked directly to student network credentials (`db_hadz0024`). 
 The scope of this profile was explicitly isolated to have `CREATEDB` access rights.
 
+```bash
 # Connecting as alternative superuser to provision a restricted profile
 sudo -i -u dbadmin
 createuser --interactive db_hadz0024
