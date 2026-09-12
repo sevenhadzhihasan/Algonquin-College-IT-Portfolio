@@ -19,12 +19,14 @@ The tasks involve creating alternative system administrators, defining custom re
 Switched execution context to system root privileges to establish a matching system operating system account named `dbadmin`. 
 Authenticated against the primary background master cluster service account to provision the role as an official database-level superuser.
 
+```bash
 # Provisioning the standard system host identity account
 sudo -i
 useradd -m -s /bin/bash dbadmin
 passwd dbadmin
 exit
 
+```bash
 # Registering the superuser scope inside the DBMS environment
 sudo -i -u postgres
 createuser -s dbadmin
