@@ -1,200 +1,204 @@
-============================================================
-LAB 02 SUBMISSION FILE — IPv6 ADDRESS SCOPE AND NETWORK IDENTITY
-STUDENT POD VALUE (U) : 12
-STUDENT USERNAME      : hadz0024
-============================================================
-
 === C01 – IPv6 Routing Enabled ===
-R1# show running-config | include ipv6 unicast-routing
+
+l02-hadz0024-R1#show running-config | include ipv6 unicast-routing
 ipv6 unicast-routing
-R2# show running-config | include ipv6 unicast-routing
+l02-hadz0024-R2#show running-config | include ipv6 unicast-routing
 ipv6 unicast-routing
-R3# show running-config | include ipv6 unicast-routing
+l02-hadz0024-R3#show running-config | include ipv6 unicast-routing
 ipv6 unicast-routing
 
-!-- IPv6 unicast routing is enabled. Without this command, the router can have IPv6 interface addresses but will not forward IPv6 packets between interfaces.
-
-
-!-- IPv6 unicast routing is enabled. Without this command, the router can have IPv6 interface addresses but will not forward IPv6 packets between interfaces.
-
+!-- This proves IPv6 unicast routing is enabled. Without this command, the router can have IPv6 interface addresses but will not forward IPv6 packets between interfaces.
 
 === C02 – Router IPv6 Interface Identity ===
-R1# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
+
+l02-hadz0024-R1#show ipv6 interface brief
+GigabitEthernet0/0/0       [up/up]
     FE80::1
     2010:ACAD:12:12::1
-GigabitEthernet0/0/1     [up/up]
+GigabitEthernet0/0/1       [up/up]
     FE80::1
     FD00:ACAD:12:A::1
-GigabitEthernet0/0/2     [up/up]
+GigabitEthernet0/0/2       [up/up]
     FE80::1
     FD00:ACAD:12:B::1
+Vlan1                      [administratively down/down]
+    unassigned
 
-R2# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
+l02-hadz0024-R2#show ipv6 interface brief
+GigabitEthernet0/0/0       [up/up]
     FE80::2
     2010:ACAD:12:12::2
-GigabitEthernet0/0/1     [up/up]
+GigabitEthernet0/0/1       [up/up]
     FE80::2
     2010:ACAD:12:23::2
-GigabitEthernet0/0/2     [up/up]
+GigabitEthernet0/0/2       [up/up]
     FE80::2
     2010:ACAD:12:99::2
+Vlan1                      [administratively down/down]
+    unassigned
 
-R3# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
+l02-hadz0024-R3#show ipv6 interface brief
+GigabitEthernet0/0/0       [up/up]
     FE80::3
     2010:ACAD:12:23::3
-GigabitEthernet0/0/1     [up/up]
+GigabitEthernet0/0/1       [up/up]
     FE80::3
     FD00:ACAD:12:C::3
-GigabitEthernet0/0/2     [up/up]
+GigabitEthernet0/0/2       [up/up]
     FE80::3
     2010:ACAD:12:D::3
+Vlan1                      [administratively down/down]
+    unassigned
 
-!-- R1 Site A and Site B use ULA addressing, the R1-R2 transit uses GUA addressing, and R1 uses fe80::1 as its LLA.
-!-- R2 The core/transit and External Server LAN interfaces use GUA addressing, and R2 uses fe80::2 as its LLA.
-!-- R3 Site C uses ULA addressing, Site D uses GUA addressing, and R3 uses fe80::3 as its LLA.
-
+!-- R1 evidence proves Site A and Site B use ULA addressing, the R1-R2 transit uses GUA addressing, and R1 uses fe80::1 as its LLA.
+!-- R2 evidence proves the core/transit and External Server LAN interfaces use GUA addressing, and R2 uses fe80::2 as its LLA.
+!-- R3 evidence proves Site C uses ULA addressing, Site D uses GUA addressing, and R3 uses fe80::3 as its LLA.
 
 === C03 – Host Local Gateway Tests ===
-Site A PC> ping fd00:acad:12:a::1
+
+C:\>ping fd00:acad:12:a::1
 Pinging fd00:acad:12:a::1 with 32 bytes of data:
 Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
 Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
 Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:A::1: bytes=32 time=2ms TTL=255
+Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
 
-Site B PC> ping fd00:acad:12:b::1
+C:\>ping fd00:acad:12:b::1
 Pinging fd00:acad:12:b::1 with 32 bytes of data:
 Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
 Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
 Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:B::1: bytes=32 time=1ms TTL=255
+Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
 
-Site C PC> ping fd00:acad:12:c::3
+C:\>ping fd00:acad:12:c::3
 Pinging fd00:acad:12:c::3 with 32 bytes of data:
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
+Reply from FD00:ACAD:12:C::3: bytes=32 time<1ms TTL=255
+Reply from FD00:ACAD:12:C::3: bytes=32 time<1ms TTL=255
+Reply from FD00:ACAD:12:C::3: bytes=32 time<1ms TTL=255
+Reply from FD00:ACAD:12:C::3: bytes=32 time<1ms TTL=255
 
-Site D PC> ping 2010:acad:12:d::3
+C:\>ping 2010:acad:12:d::3
 Pinging 2010:acad:12:d::3 with 32 bytes of data:
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:D::3: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:D::3: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:D::3: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:D::3: bytes=32 time<1ms TTL=255
 
-External Server> ping 2010:acad:12:99::2
+C:\>ping 2010:acad:12:99::2
 Pinging 2010:acad:12:99::2 with 32 bytes of data:
-Reply from 2010:ACAD:12:99::2: bytes=32 time ping fd00:acad:12:b::10
+Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
+Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
+
+!-- This proves each host has a usable IPv6 identity on its local network.
+
+=== C04 – SSH and TCP Session Evidence ===
+
+l02-hadz0024-R1#show ip ssh
+SSH Enabled - version 2.0
+Authentication timeout: 120 secs; Authentication retries: 3
+l02-hadz0024-R1#show tcp brief
+TCB       Local Address           Foreign Address        (state)
+
+!-- This proves SSHv2 is enabled on R1 and that Site A PC opened an active SSH TCP session to R1 using IPv6.
+
+=== C05 – IPv6 Static Route Evidence ===
+
+l02-hadz0024-R1#show ipv6 route summary
+IPv6 routing table name is default(0) global scope - 7 entries
+IPv6 routing table default maximum-paths is 16
+Route Source    Networks    Overhead    Memory (bytes)
+connected       3           264         372
+local           4           352         496
+Total           7           616         868
+
+  Number of prefixes:
+    /8: 1, /64: 3, /128: 3
+
+l02-hadz0024-R2#show ipv6 route
+IPv6 Routing Table - 8 entries
+Codes: C - Connected, L - Local, S - Static, R - RIP, B - BGP
+       U - Per-user Static route, M - MIPv6
+       I1 - ISIS L1, I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary
+       ND - ND Default, NDp - ND Prefix, DCE - Destination, NDr - Redirect
+       O - OSPF intra, OI - OSPF inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
+       ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+       D - EIGRP, EX - EIGRP external
+S   2010:ACAD:12:D::/64 [1/0]
+     via 2010:ACAD:12:23::3, GigabitEthernet0/0/1
+C   2010:ACAD:12:12::/64 [0/0]
+     via GigabitEthernet0/0/0, directly connected
+L   2010:ACAD:12:12::2/128 [0/0]
+     via GigabitEthernet0/0/0, receive
+C   2010:ACAD:12:23::/64 [0/0]
+     via GigabitEthernet0/0/1, directly connected
+L   2010:ACAD:12:23::2/128 [0/0]
+     via GigabitEthernet0/0/1, receive
+C   2010:ACAD:12:99::/64 [0/0]
+     via GigabitEthernet0/0/2, directly connected
+L   2010:ACAD:12:99::2/128 [0/0]
+     via GigabitEthernet0/0/2, receive
+L   FF00::/8 [0/0]
+     via Null0, receive
+
+l02-hadz0024-R3#show ipv6 route 2010:acad:12:99::/64
+Routing entry for 2010:ACAD:12:99::/64
+  Known via "static", distance 1, metric 0
+  Route count is 1/1, share count 0
+  Routing paths:
+  Routing paths:2010:ACAD:12:23::2
+      Last update 2010:ACAD:12:23::2 on GigabitEthernet0/0/0, 00:00:00 ago
+
+l02-hadz0024-R2#show ipv6 route fd00:acad:12:a::/64 
+% Route not found
+
+l02-hadz0024-R2#show ipv6 route fd00:acad:12:b::/64 
+% Route not found
+
+l02-hadz0024-R2#show ipv6 route fd00:acad:12:c::/64
+% Route not found
+
+!-- This proves only the required GUA static routes exist and R1 has no static route toward the external network.
+
+=== C06 – IPv6 Scope Reachability Tests ===
+
+C:\>ping fd00:acad:12:b::10  
 Pinging fd00:acad:12:b::10 with 32 bytes of data:
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
+Reply from FD00:ACAD:12:B::10: bytes=32 time<1ms TTL=127
+Reply from FD00:ACAD:12:B::10: bytes=32 time<1ms TTL=127
+Reply from FD00:ACAD:12:B::10: bytes=32 time<1ms TTL=127
+Reply from FD00:ACAD:12:B::10: bytes=32 time<1ms TTL=127
 
-Site A PC> ping 2010:acad:12:99::99
+C:\>ping 2010:acad:12:99::99
 Pinging 2010:acad:12:99::99 with 32 bytes of data:
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 
-Site A PC> ping fd00:acad:12:c::10
+C:\>ping fd00:acad:12:c::10  
 Pinging fd00:acad:12:c::10 with 32 bytes of data:
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 Reply from FD00:ACAD:12:A::1: Destination host unreachable.
 
-Site C PC> ping 2010:acad:12:d::10
+C:\>ping 2010:acad:12:d::10 
 Pinging 2010:acad:12:d::10 with 32 bytes of data:
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 
-Site C PC> ping 2010:acad:12:99::99
+C:\>ping 2010:acad:12:99::99
 Pinging 2010:acad:12:99::99 with 32 bytes of data:
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 Reply from FD00:ACAD:12:C::3: Destination host unreachable.
 
-Site D PC> ping 2010:acad:12:99::99
-Pinging 2010:acad:12:99::99 with 32 bytes of data:
-Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
-
-!-- This proves Site A and Site B ULA networks can communicate internally, Site C ULA is blocked from the GUA zone by boundary policy, Site A/B/C do not have external reachability, and Site D GUA can reach the External Server.
-Use code with caution.If you want to configure more files inside your repository, let me know:What specific configurations belong inside your server_config.sh file under Linux Network Services?What specific SQL layout requirements do you have for your Database Management folder?
-!-- R1 Site A and Site B use ULA addressing, the R1-R2 transit uses GUA addressing, and R1 uses fe80::1 as its LLA.
-!-- R2 The core/transit and External Server LAN interfaces use GUA addressing, and R2 uses fe80::2 as its LLA.
-!-- R3 Site C uses ULA addressing, Site D uses GUA addressing, and R3 uses fe80::3 as its LLA.
-
-
-=== C03 – Host Local Gateway Tests ===
-Site A PC> ping fd00:acad:12:a::1
-Pinging fd00:acad:12:a::1 with 32 bytes of data:
-Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:A::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:A::1: bytes=32 time=2ms TTL=255
-
-Site B PC> ping fd00:acad:12:b::1
-Pinging fd00:acad:12:b::1 with 32 bytes of data:
-Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:B::1: bytes=32 time<1ms TTL=255
-Reply from FD00:ACAD:12:B::1: bytes=32 time=1ms TTL=255
-
-Site C PC> ping fd00:acad:12:c::3
-Pinging fd00:acad:12:c::3 with 32 bytes of data:
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-
-Site D PC> ping 2010:acad:12:d::3
-Pinging 2010:acad:12:d::3 with 32 bytes of data:
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-
-External Server> ping 2010:acad:12:99::2
-Pinging 2010:acad:12:99::2 with 32 bytes of data:
-Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
-Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
-Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
-Reply from 2010:ACAD:12:99::2: bytes=32 time<1ms TTL=255
-
-Site A PC> ping 2010:acad:12:99::99
-Pinging 2010:acad:12:99::99 with 32 bytes of data:
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-
-Site A PC> ping fd00:acad:12:c::10
-Pinging fd00:acad:12:c::10 with 32 bytes of data:
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-Reply from FD00:ACAD:12:A::1: Destination host unreachable.
-
-Site C PC> ping 2010:acad:12:d::10
-Pinging 2010:acad:12:d::10 with 32 bytes of data:
-Reply from FD00:ACAD:12:C::3: Destination host unreachable.
-Reply from FD00:ACAD:12:C::3: Destination host unreachable.
-Reply from FD00:ACAD:12:C::3: Destination host unreachable.
-Reply from FD00:ACAD:12:C::3: Destination host unreachable.
-
-Site D PC> ping 2010:acad:12:99::99
+C:\>ping 2010:acad:12:99::99
 Pinging 2010:acad:12:99::99 with 32 bytes of data:
 Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
 Reply from 2010:ACAD:12:99::99: bytes=32 time<1ms TTL=126
