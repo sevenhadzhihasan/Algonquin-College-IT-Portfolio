@@ -1,0 +1,11 @@
+findings1=Interface GigabitEthernet0/0/2 is configured with a Global Unicast Address prefix (2010:ACAD:100:B::1/64) instead of the required Unique Local Address prefix.
+fix1=configure terminal, interface GigabitEthernet0/0/2, no ipv6 address 2010:ACAD:100:B::1/64, ipv6 address FD00:ACAD:100:B::1/64, end
+verify1=show ipv6 interface brief -> FD00:ACAD:100:B::1 appears on Gi0/0/2
+
+findings2=Interface GigabitEthernet0/0/0 is configured with a Unique Local Address prefix (FD00:ACAD:100:12::1/64) instead of the required Global Unicast Address prefix.
+fix2=configure terminal, interface GigabitEthernet0/0/0, no ipv6 address FD00:ACAD:100:12::1/64, ipv6 address 2010:ACAD:100:12::1/64, end
+verify2=show ipv6 interface brief -> 2010:ACAD:100:12::1 appears on Gi0/0/0
+
+findings3=An unauthorized IPv6 default static route (::/0 via 2010:ACAD:100:12::2) is installed on R1, which violates the external reachability constraint.
+fix3=configure terminal, no ipv6 route ::/0 2010:ACAD:100:12::2, end
+verify3=show ipv6 route ::/0 -> % Route not found
