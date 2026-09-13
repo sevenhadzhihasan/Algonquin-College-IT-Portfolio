@@ -1,0 +1,130 @@
+============================================================
+LAB 02 SUBMISSION FILE — IPv6 ADDRESS SCOPE AND NETWORK IDENTITY
+STUDENT POD VALUE (U) : 12
+STUDENT USERNAME      : hadz0024
+============================================================
+
+=== C01 – IPv6 Routing Enabled ===
+R1# show running-config | include ipv6 unicast-routing
+ipv6 unicast-routing
+R2# show running-config | include ipv6 unicast-routing
+ipv6 unicast-routing
+R3# show running-config | include ipv6 unicast-routing
+ipv6 unicast-routing
+
+!-- This proves IPv6 unicast routing is enabled. Without this command, the router can have IPv6 interface addresses but will not forward IPv6 packets between interfaces.
+
+
+=== C02 – Router IPv6 Interface Identity ===
+R1# show ipv6 interface brief
+GigabitEthernet0/0/0     [up/up]
+    FE80::1
+    2010:ACAD:12:12::1
+GigabitEthernet0/0/1     [up/up]
+    FE80::1
+    FD00:ACAD:12:A::1
+GigabitEthernet0/0/2     [up/up]
+    FE80::1
+    FD00:ACAD:12:B::1
+
+R2# show ipv6 interface brief
+GigabitEthernet0/0/0     [up/up]
+    FE80::2
+    2010:ACAD:12:12::2
+GigabitEthernet0/0/1     [up/up]
+    FE80::2
+    2010:ACAD:12:23::2
+GigabitEthernet0/0/2     [up/up]
+    FE80::2
+    2010:ACAD:12:99::2
+
+R3# show ipv6 interface brief
+GigabitEthernet0/0/0     [up/up]
+    FE80::3
+    2010:ACAD:12:23::3
+GigabitEthernet0/0/1     [up/up]
+    FE80::3
+    FD00:ACAD:12:C::3
+GigabitEthernet0/0/2     [up/up]
+    FE80::3
+    2010:ACAD:12:D::3
+
+!-- R1 evidence proves Site A and Site B use ULA addressing, the R1-R2 transit uses GUA addressing, and R1 uses fe80::1 as its LLA.
+!-- R2 evidence proves the core/transit and External Server LAN interfaces use GUA addressing, and R2 uses fe80::2 as its LLA.
+!-- R3 evidence proves Site C uses ULA addressing, Site D uses GUA addressing, and R3 uses fe80::3 as its LLA.
+
+
+=== C03 – Host Local Gateway Tests ===
+Site A PC> ping fd00:acad:12:a::1
+Pinging fd00:acad:12:a::1 with 32 bytes of data:
+Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
+
+Site B PC> ping fd00:acad:12:b::1
+Pinging fd00:acad:12:b::1 with 32 bytes of data:
+Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
+
+Site C PC> ping fd00:acad:12:c::3
+Pinging fd00:acad:12:c::3 with 32 bytes of data:
+Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
+Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
+
+Site D PC> ping 2010:acad:12:d::3
+Pinging 2010:acad:12:d::3 with 32 bytes of data:
+Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
+Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
+Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
+Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
+
+External Server> ping 2010:acad:12:99::2
+Pinging 2010:acad:12:99::2 with 32 bytes of data:
+Reply from 2010:acad:12:99::2: bytes=32 time ping fd00:acad:12:b::10
+Pinging fd00:acad:12:b::10 with 32 bytes of data:
+Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
+Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
+Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
+Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
+
+Site A PC> ping 2010:acad:12:99::99
+Pinging 2010:acad:12:99::99 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Site A PC> ping fd00:acad:12:c::10
+Pinging fd00:acad:12:c::10 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Site C PC> ping 2010:acad:12:d::10
+Pinging 2010:acad:12:d::10 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Site C PC> ping 2010:acad:12:99::99
+Pinging 2010:acad:12:99::99 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Site D PC> ping 2010:acad:12:99::99
+Pinging 2010:acad:12:99::99 with 32 bytes of data:
+Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
+Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
+Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
+Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
+
+!-- This proves Site A and Site B ULA networks can communicate internally, Site C ULA is blocked from the GUA zone by boundary policy, Site A/B/C do not have external reachability, and Site D GUA can reach the External Server.
