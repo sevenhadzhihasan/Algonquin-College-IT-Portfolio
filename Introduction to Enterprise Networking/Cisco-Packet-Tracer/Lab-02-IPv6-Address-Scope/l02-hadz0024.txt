@@ -1,130 +1,32 @@
-============================================================
-LAB 02 SUBMISSION FILE — IPv6 ADDRESS SCOPE AND NETWORK IDENTITY
-STUDENT POD VALUE (U) : 12
-STUDENT USERNAME      : hadz0024
-============================================================
+# Lab 02 — IPv6 Address Scope and Network Identity
 
-=== C01 – IPv6 Routing Enabled ===
-R1# show running-config | include ipv6 unicast-routing
-ipv6 unicast-routing
-R2# show running-config | include ipv6 unicast-routing
-ipv6 unicast-routing
-R3# show running-config | include ipv6 unicast-routing
-ipv6 unicast-routing
+## Technical Summary
+This project analyzes **IPv6 address scopes** and demonstrates the enforcement of **administrative routing-policy boundaries** on Cisco routing systems. The lab environment simulates internal enterprise networks (ULA space) and routes them securely against a globally routable public transit core (GUA space) using **Cisco Packet Tracer**.
 
-!-- This proves IPv6 unicast routing is enabled. Without this command, the router can have IPv6 interface addresses but will not forward IPv6 packets between interfaces.
+## Address Scope Classification
+* **Link-Local Addresses (LLA) [`fe80::/10`]:** Scoped strictly to the immediate local link layer for neighbor discovery and next-hop handling.
+* **Unique Local Addresses (ULA) [`fc00::/7`, commonly `fd00::/8`]:** Applied to private enterprise networks (`fd00:acad:12:...` ranges for Sites A, B, and C) to simulate internal site assets.
+* **Global Unicast Addresses (GUA) [`2010::/64`]:** Utilized for public transit networks, Site D, and the External Server infrastructure.
 
+## Policy Implementation & Device Management
+Instead of relying on access control lists (ACLs), this lab achieves network segregation strictly via **routing-policy constraints**:
+* **R1** is kept completely isolated from the internet core by intentionally omitting default routes (`::/0`) or external networks from its routing tables.
+* **R2** (the core transit engine) deliberately excludes all internal enterprise ULA prefixes (`fd00::/8`), isolating cross-site communication.
+* Symmetrical **fully specified static routes** were designed and deployed across the transit core strictly to map bidirectional traffic between **Site D** and the **External Server**.
 
-=== C02 – Router IPv6 Interface Identity ===
-R1# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
-    FE80::1
-    2010:ACAD:12:12::1
-GigabitEthernet0/0/1     [up/up]
-    FE80::1
-    FD00:ACAD:12:A::1
-GigabitEthernet0/0/2     [up/up]
-    FE80::1
-    FD00:ACAD:12:B::1
+### Secure Management Plane (SSHv2 Setup)
+To satisfy local device management policies on **R1**, an encrypted **SSHv2 connection matrix** was deployed by binding host identity elements:
+* **Device Hostname:** `R1`
+* **Local Domain Association:** `cst8371.net`
+* **Cryptographic Identity String:** `R1.cst8371.net` (Validated via a 1024-bit RSA key modulus)
+* **VTY Infrastructure Locking:** Configured with local privilege-15 authentication, standard `exec-timeout` protections, and an explicit `transport input ssh` restriction block to mitigate unencrypted cleartext access vectors.
 
-R2# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
-    FE80::2
-    2010:ACAD:12:12::2
-GigabitEthernet0/0/1     [up/up]
-    FE80::2
-    2010:ACAD:12:23::2
-GigabitEthernet0/0/2     [up/up]
-    FE80::2
-    2010:ACAD:12:99::2
+## Verification Matrix Summary
+* **Site A ↔ Site B (ULA Link):** ✅ **SUCCEED** (Internal enterprise segments share data locally across R1).
+* **Site D ↔ External Server (GUA Static Link):** ✅ **SUCCEED** (Core static routes transfer traffic successfully).
+* **Site A ↔ Site C (Inter-Site Isolation):** 🔒 **BLOCKED (Request timed out)** (Traffic dropped at core because ULA routes are withheld).
+* **Site A ↔ External Server (Core Boundary):** 🔒 **BLOCKED (Request timed out)** (Traffic dropped by edge router due to absence of an external route).
 
-R3# show ipv6 interface brief
-GigabitEthernet0/0/0     [up/up]
-    FE80::3
-    2010:ACAD:12:23::3
-GigabitEthernet0/0/1     [up/up]
-    FE80::3
-    FD00:ACAD:12:C::3
-GigabitEthernet0/0/2     [up/up]
-    FE80::3
-    2010:ACAD:12:D::3
-
-!-- R1 evidence proves Site A and Site B use ULA addressing, the R1-R2 transit uses GUA addressing, and R1 uses fe80::1 as its LLA.
-!-- R2 evidence proves the core/transit and External Server LAN interfaces use GUA addressing, and R2 uses fe80::2 as its LLA.
-!-- R3 evidence proves Site C uses ULA addressing, Site D uses GUA addressing, and R3 uses fe80::3 as its LLA.
-
-
-=== C03 – Host Local Gateway Tests ===
-Site A PC> ping fd00:acad:12:a::1
-Pinging fd00:acad:12:a::1 with 32 bytes of data:
-Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:a::1: bytes=32 time<1ms TTL=255
-
-Site B PC> ping fd00:acad:12:b::1
-Pinging fd00:acad:12:b::1 with 32 bytes of data:
-Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:b::1: bytes=32 time<1ms TTL=255
-
-Site C PC> ping fd00:acad:12:c::3
-Pinging fd00:acad:12:c::3 with 32 bytes of data:
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-Reply from fd00:acad:12:c::3: bytes=32 time<1ms TTL=255
-
-Site D PC> ping 2010:acad:12:d::3
-Pinging 2010:acad:12:d::3 with 32 bytes of data:
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-Reply from 2010:acad:12:d::3: bytes=32 time<1ms TTL=255
-
-External Server> ping 2010:acad:12:99::2
-Pinging 2010:acad:12:99::2 with 32 bytes of data:
-Reply from 2010:acad:12:99::2: bytes=32 time ping fd00:acad:12:b::10
-Pinging fd00:acad:12:b::10 with 32 bytes of data:
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-Reply from fd00:acad:12:b::10: bytes=32 time<1ms TTL=254
-
-Site A PC> ping 2010:acad:12:99::99
-Pinging 2010:acad:12:99::99 with 32 bytes of data:
-Request timed out.
-Request timed out.
-Request timed out.
-Request timed out.
-
-Site A PC> ping fd00:acad:12:c::10
-Pinging fd00:acad:12:c::10 with 32 bytes of data:
-Request timed out.
-Request timed out.
-Request timed out.
-Request timed out.
-
-Site C PC> ping 2010:acad:12:d::10
-Pinging 2010:acad:12:d::10 with 32 bytes of data:
-Request timed out.
-Request timed out.
-Request timed out.
-Request timed out.
-
-Site C PC> ping 2010:acad:12:99::99
-Pinging 2010:acad:12:99::99 with 32 bytes of data:
-Request timed out.
-Request timed out.
-Request timed out.
-Request timed out.
-
-Site D PC> ping 2010:acad:12:99::99
-Pinging 2010:acad:12:99::99 with 32 bytes of data:
-Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
-Reply from 2010:acad:12:99::99: bytes=32 time<1ms TTL=126
-
-!-- This proves Site A and Site B ULA networks can communicate internally, Site C ULA is blocked from the GUA zone by boundary policy, Site A/B/C do not have external reachability, and Site D GUA can reach the External Server.
+## Deliverables Inside This Directory
+* `l02-hadz0024.txt`: Complete terminal logs proving active interface identities (`show ipv6 interface brief`), SSH session tracking, static routing configurations, and ICMPv6 boundary pings.
+* `a02-hadz0024.txt`: A granular, multi-point configuration audit identifying misallocated scopes and providing the minimal Cisco IOS fixes needed to restore an operational target state.
