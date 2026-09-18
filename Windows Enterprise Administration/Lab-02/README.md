@@ -64,4 +64,4 @@ To address critical security advisories or application end-of-life cycles, two p
 | Removal Policy Method | Visual Environment Result | Operational Impact |
 | :--- | :--- | :--- |
 | **Immediately uninstall the software** | Package metadata is purged cleanly from the GPO window list. | Clears the software layout from all endpoints upon next background policy refresh loop. |
-| **Allow users to continue to use...** | The item remains visible in the console with a **Red X** visual indicator badge overlay. | Lockout parameters prevent any new users from pulling down the deployment package while existing users remain completely unaffected. |
+| **Allow users to continue to use...** | The item remains visible in the console with a **Red X** visual indicator badge overlay. | Lockout parameters prevent any new users from pulling down the deployment package while existing users remain completely unaffected.
