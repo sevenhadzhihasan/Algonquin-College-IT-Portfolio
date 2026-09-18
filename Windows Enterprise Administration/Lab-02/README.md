@@ -9,8 +9,6 @@
 4. Manage application lifecycles through mandatory and optional version upgrades.
 5. Execute emergency package removal protocols targeting multi-tier Organizational Units (OUs).
 
----
-
 ## Environment Baseline Configuration
 
 ### 1. Active Directory OU & User Infrastructure
@@ -27,8 +25,6 @@ Standard service constraints were applied to prevent account modification and pa
 By default, Windows Server restricts standard accounts from console interactive logons. Security controls were modified within the **Default Domain Controllers Policy** under the following execution path 
 `Computer Configuration` `Policies` `Windows Settings` `Security Settings` `Local Policies` `User Rights Assignment` **Allow log on locally**
 * **Authorized Access Control List:** `Administrators`, `Server Operators`, `Print Operators`, `Backup Operators`, `Account Operators`, and `DM89069\Domain Users`.
-
----
 
 ## Step-by-Step Implementation Guide
 
@@ -60,8 +56,6 @@ By default, Windows Server restricts standard accounts from console interactive 
 ### Phase 5: Emergency Software Revocation
 1. Initiated a mandatory software deletion pipeline targeting **Cosmo2** by using the selection tool parameter: **Immediately uninstall the software from users and computers**
 2. Applied a soft lockout on the **Green** application package using: **Allow users to continue to use the software, but prevent new installations**
-
----
 
 ## Automated Software Removal Configurations
 
