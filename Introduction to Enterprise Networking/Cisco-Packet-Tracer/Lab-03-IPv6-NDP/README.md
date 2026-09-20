@@ -23,10 +23,8 @@ Observe and document how IPv6 hosts dynamically discover their local network inf
 3. **Duplicate Address Detection (DAD):** Verify how the operating system kernel blocks a duplicate IP address assignment to maintain structural link safety.
 
 ## Planned Lab Deliverables Checklist
-- [ ] **l03-c01-hadz0024.txt:** Verify base script application and manual Gi0/0/1 configuration.
-- [ ] **l03-c02-hadz0024.txt:** Log the active RS/RA exchange on the router.
-- [ ] **l03-c03-hadz0024.txt:** Log the NS/NA transaction and neighbor cache table state shifts.
-- [ ] **l03-c04-hadz0024.txt:** Log the operational behavior of Duplicate Address Detection.
-- [ ] **l03-c05-hadz0024.txt:** Generate automated end-to-end off-link connectivity logs.
-- [ ] **l03-config-hadz0024.txt:** Export final running configuration via TFTP.
-- [ ] **r03-hadz0024.txt:** Complete the mandatory weekly troubleshooting reflection log.
+- [x] **l03-c01-hadz0024.txt:** Verify base script application and manual Gi0/0/1 configuration.
+- [x] **l03-c02-hadz0024.txt:** Log the active RS/RA exchange on the router.
+- [x] **l03-c03-hadz0024.txt:** Log the NS/NA transaction and neighbor cache table state shifts.
+- [x] **l03-c04-hadz0024.txt:** Log the operational behavior of Duplicate Address Detection.
+- [x] **l03-c05-hadz0024.txt:** Generate automated end-to-end off-link connectivity logs.
