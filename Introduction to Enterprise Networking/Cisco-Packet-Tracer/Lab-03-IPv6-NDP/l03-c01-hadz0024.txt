@@ -1,0 +1,62 @@
+hadz0024-EDGE#sh ip ssh
+SSH Enabled - version 2.0
+Authentication methods:publickey,keyboard-interactive,password
+Authentication Publickey Algorithms:x509v3-ssh-rsa,ssh-rsa,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,x509v3-ecdsa-sha2-nistp256,x509v3-ecdsa-sha2-nistp384,rsa-sha2-256,rsa-sha2-512
+Hostkey Algorithms:x509v3-ssh-rsa,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+Encryption Algorithms:aes128-gcm,aes256-gcm,aes128-ctr,aes192-ctr,aes256-ctr
+MAC Algorithms:hmac-sha2-256,hmac-sha2-512,hmac-sha1,hmac-sha1-96
+KEX Algorithms:ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+Authentication timeout: 120 secs; Authentication retries: 3
+Minimum expected Diffie Hellman key size : 2048 bits
+IOS Keys in SECSH format(ssh-rsa, base64 encoded): hadz0024-EDGE.cst8371.local
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCadYRwVoMewa/JGPHf4clTuNkOGKXuhc75V36iKJno
+TtFWZqwkppuab7u1IcI+Fu+JeDR6HnzZzREADovmZb0alpdZxDKNfH8oXt1kpr3y3m4Nd01lH/Cx1N6K
+zstold6opaWs1wypON8WS1hw+Rvlbrtx3aP9RZUbTNjRkcmC+Q==
+
+hadz0024-EDGE#sh ipv6 int br
+GigabitEthernet0/0/0   [administratively down/down]
+    FE80::12
+    2001:FAB:203::12
+GigabitEthernet0/0/1   [up/up]
+    FE80::12
+    2010:ACAD:12:AA::12
+GigabitEthernet0/0/2   [down/down]
+    unassigned
+GigabitEthernet0       [down/down]
+    unassigned
+
+hadz0024-EDGE#sh ipv6 int g0/0/1
+GigabitEthernet0/0/1 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::12
+  No Virtual link-local address(es):
+  Description: VM-LAN-RA-Source
+  Global unicast address(es):
+    2010:ACAD:12:AA::12, subnet is 2010:ACAD:12:AA::/64
+  Joined group address(es):
+    FF02::1
+    FF02::2
+    FF02::1:FF00:12
+  MTU is 1500 bytes
+  ICMP error messages limited to one every 100 milliseconds
+  ICMP redirects are enabled
+  ICMP unreachables are sent
+  ND DAD is enabled, number of DAD attempts: 1
+  ND reachable time is 30000 milliseconds (using 30000)
+  ND advertised reachable time is 0 (unspecified)
+  ND advertised retransmit interval is 0 (unspecified)
+  ND router advertisements are sent every 200 seconds
+  ND router advertisements live for 1800 seconds
+  ND advertised default router preference is Medium
+  Hosts use stateless autoconfig for addresses.
+
+hadz0024-EDGE#sh ipv6 route static
+IPv6 Routing Table - default - 3 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter
+       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
+       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
+       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy
+       lp - LISP publications, a - Application, m - OMP

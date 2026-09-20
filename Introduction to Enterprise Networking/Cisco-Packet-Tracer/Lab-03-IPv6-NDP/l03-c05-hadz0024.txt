@@ -1,0 +1,40 @@
+================================================================================
+
+ Device: 2010:acad:12:aa::12
+
+================================================================================
+
++--------------------------------------------------------------------------------
+|Command: show ipv6 interface brief
++--------------------------------------------------------------------------------
+GigabitEthernet0/0/0   [up/up]
+    FE80::12
+    2001:FAB:203::12
+GigabitEthernet0/0/1   [up/up]
+    FE80::12
+    2010:ACAD:12:AA::12
+GigabitEthernet0/0/2   [down/down]
+    unassigned
+GigabitEthernet0       [down/down]
+    unassigned
++--------------------------------------------------------------------------------
+|Command: show ipv6 neighbors
++--------------------------------------------------------------------------------
+IPv6 Address                              Age Link-layer Addr State Interface
+2001:FAB:203::254                           1 6416.8dea.42c0  STALE Gi0/0/0
+FE80::254                                   1 6416.8dea.42c0  STALE Gi0/0/0
+2010:ACAD:12:AA:0:FF:FE00:1209              0 0200.0000.1209  REACH Gi0/0/1
+2010:ACAD:12:AA:A94C:8AE:5B22:D94C         10 30de.4b32.d3ce  STALE Gi0/0/1
+2010:ACAD:12:AA:F8C2:A291:327D:E5FF        94 30de.4b32.d3ce  STALE Gi0/0/1
+FE80::FF:FE00:1209                        100 0200.0000.1209  STALE Gi0/0/1
+FE80::7D2E:355A:15D5:13B0                  10 30de.4b32.d3ce  STALE Gi0/0/1
+FE80::DC5D:70B0:B0CF:D27D                  68 d89e.f337.1580  STALE Gi0/0/1
+
++--------------------------------------------------------------------------------
+|Command: show ipv6 route static
++--------------------------------------------------------------------------------
+IPv6 Routing Table - default - 6 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+

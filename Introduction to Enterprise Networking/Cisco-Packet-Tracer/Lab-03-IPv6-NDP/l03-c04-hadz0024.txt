@@ -1,0 +1,11 @@
+hadz0024-EDGE#show logging | include DAD.
+*Sep 20 10:48:21.893: %IPV6_ND-6-DUPLICATE_INFO: DAD attempt detected for 2010:ACAD:12:AA::12 on GigabitEthernet0/0/1
+
+alpine: # ip -6 addr show etho
+2: eth0: <BROADCAST, MULTICAST, UP, LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+inet6 2010 :acad : 12 :aa : : 12/64 scope global dadfailed tentative
+valid_lft forever preferred_lft forever
+inet6 2010:acad : 12 :aa :0: ff : fe00: 1209/64 scope global dynamic mgtmpaddr proto kernel_ra
+valid_lft 2591516sec preferred_lft 604316sec
+inet6 fe80: : ff : fe00: 1209/64 scope link proto kernel_1l
+valid lft forever preferred lft forever
