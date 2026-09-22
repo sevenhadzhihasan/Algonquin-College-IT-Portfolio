@@ -4,9 +4,9 @@ This directory contains the production shell script and evaluation diagnostics m
 
 ## Key Implemented Milestones
 
-* **Security Policy Rule Matrices** — Constructed a modular `iptables` configuration utility that systematically purges runtime table spaces, authorizes inbound TCP traffic states originating exclusively from trusted client network paths (`172.16.31.0/24`), and immediately terminates tracking frames from sibling server nodes (`172.16.30.0/24`) on production port `49999`.
+* **Security Policy Rule Matrices** — Constructed a modular `iptables` configuration utility that systematically purges runtime table spaces, authorizes inbound TCP traffic states originating exclusively from trusted client network paths (`172.16.31.0/24`), and drops inbound packets from sibling server nodes (`172.16.30.0/24`) on production port `49999`.
 * **Network Diagnostic Interceptions** — Managed deep packet inspection layers utilizing `tcpdump` tracking on the `ens224` network interface layer, collecting precise transactional payload dumps formatting in multi-byte ASCII hexadecimal notation fields.
-* **Socket Bound Infrastructure** — Configured generic daemon bindings using continuous netcat standard loops (`nc -vkl`) to securely evaluate and test inbound connectivity channels.
+* **Socket Bound Infrastructure** — Configured generic daemon bindings using continuous Netcat standard loops (`nc -vkl`) to securely evaluate and test inbound connectivity channels.
 
 ---
 
@@ -38,7 +38,7 @@ nc -vkl 49999
 ```
 
 ### 3. Initialize Packet Inspector
-In an alternate server console layout workspace, attach the logging utility to monitor the target hardware interface link:
+In an alternate server console workspace, attach the logging utility to monitor the target hardware interface link:
 ```bash
 sudo tcpdump -i ens224 -qnX -tttt port 49999
 ```
@@ -50,5 +50,5 @@ sudo tcpdump -i ens224 -qnX -tttt port 49999
   ```
 * **Server Reject Test:** Fire an endpoint query loop directly from an internal Server node system interface environment (`172.16.30.x`). The target router blocks the communication path immediately.
   ```bash
-  nc -v 172.16.30.130 49999
+  nc -v [SERVER_IP] 49999
   ```
