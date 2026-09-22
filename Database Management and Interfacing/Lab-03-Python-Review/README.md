@@ -1,6 +1,6 @@
 # Lab 03 - Python Fundamentals Review
 
-This directory contains the completed solutions for the **Python Fundamentals Review Worksheet** from Algonquin College. The lab include iterative logic, data structure manipulation, and flat-file processing (CSV and JSON).
+This directory contains the completed solutions for the **Python Fundamentals Review Worksheet** from Algonquin College. The lab includes iterative logic, data structure manipulation, and flat-file processing (CSV and JSON).
 
 ## Implemented Exercises
 
@@ -10,7 +10,9 @@ This directory contains the completed solutions for the **Python Fundamentals Re
 * **Section D: CSV File Handling** — Employs `csv.DictReader` to stream tabular student record schemas directly out of local text-based spreadsheets into memory instances.
 * **Section E: JSON Parsing** — Leverages native data serialization via `json.load()` and `json.dump()` routines to process, dynamically update, and cleanly serialize structured configurations securely back to flat-file storage.
 
-## File Layout
+---
+
+## 📁 File Layout
 
 ```text
 Lab-03-Python-Review/
