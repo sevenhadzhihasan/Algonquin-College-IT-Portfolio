@@ -44,4 +44,4 @@ This cross-functional workflow maps how TrueNorth Airline safely tests and deplo
 ---
 
 ## 📁 Files Included
-* `CST8206_Assignment1_Workflow.drawio` : Editable design architecture vector file.
+* `CST8206_Assignment1_Report_Seven_Hadzhihasan.html` : Editable design architecture vector file.
