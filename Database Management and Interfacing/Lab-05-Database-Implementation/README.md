@@ -1,6 +1,7 @@
 # Lab 05: Database Implementation
 
-This folder contains the physical database schema and implementation scripts for a relational library system using PostgreSQL. The project involves interpreting a logical Entity-Relationship Diagram (ERD), finalizing physical design mappings, and deploying structured SQL scripts.
+This folder contains the physical database schema and implementation scripts for a relational library system using PostgreSQL. 
+The project involves interpreting a logical Entity-Relationship Diagram (ERD), finalizing physical design mappings, and deploying structured SQL scripts.
 
 ## 📐 Schema Mapping & Data Types
 
@@ -28,14 +29,14 @@ The authoritative database architecture implements the following data types and 
 ## 🚀 Deployment Instructions
 
 ### 1. Initialize the Environment
-Log into your database terminal profile as `dbadmin` and prepare the relational database workspace:
+Log into my database terminal profile as `dbadmin` and prepare the relational database workspace:
 ```sql
 CREATE DATABASE lib_hadz0024;
 \c lib_hadz0024
 ```
 
 ### 2. Execute Data Definition Language (DDL) Scripts
-Run the scripts using the interactive `psql` shell file importer in the following sequence to preserve mandatory foreign key dependencies:
+Run the scripts in `psql` shell in the following sequence to preserve mandatory foreign key dependencies:
 ```text
 \i create_member.sql
 \i create_book.sql
