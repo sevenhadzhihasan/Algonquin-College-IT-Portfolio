@@ -30,8 +30,8 @@ The authoritative database architecture implements the following data types and 
 ### 1. Initialize the Environment
 Log into your database terminal profile as `dbadmin` and prepare the relational database workspace:
 ```sql
-CREATE DATABASE lib_your_network_ID;
-\c lib_your_network_ID
+CREATE DATABASE lib_hadz0024;
+\c lib_hadz0024
 ```
 
 ### 2. Execute Data Definition Language (DDL) Scripts
