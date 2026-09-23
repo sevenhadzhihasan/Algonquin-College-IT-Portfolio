@@ -41,5 +41,3 @@ This cross-functional workflow maps how TrueNorth Airline safely tests and deplo
 | **11** | Verify Traffic Logs | The engineer validates the live production traffic streaming data to confirm that active production data packets match the rule. | Network Security Engineer |
 | **12** | End: Infrastructure Secured | The engine saves the final logs to the system database and finishes the process. | Central Security Orchestration Engine |
 
----
-
