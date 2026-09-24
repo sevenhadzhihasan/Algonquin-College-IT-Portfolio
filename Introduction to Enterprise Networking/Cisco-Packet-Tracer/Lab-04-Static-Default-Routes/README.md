@@ -8,6 +8,7 @@ This layout ensures full network reachability alongside robust WAN link redundan
 
 ## Network Topology & Design Goals
 ![Packet Tracer Network Topology](screenshot.jpg)
+
 The topology features an enterprise edge router (`Edge_Router`) dual-homed to two separate Internet Service Providers (`ISP1` and `ISP2`) using point-to-point WAN Serial connections. The layout achieves:
 * **Primary Path Data Flow:** Outbound network traffic favors the high-priority path through `ISP1`.
 * **Dynamic Failure Redundancy:** Floating static routes with an Administrative Distance (AD) of `5` stand ready to instantly carry production workloads via `ISP2` if the primary link physically drops.
