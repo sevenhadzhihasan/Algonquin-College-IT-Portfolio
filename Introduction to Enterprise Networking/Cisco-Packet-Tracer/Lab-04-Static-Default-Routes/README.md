@@ -7,6 +7,7 @@ The primary objective of this lab is to design, implement, and test an end-to-en
 This layout ensures full network reachability alongside robust WAN link redundancy via dual ISPs.
 
 ## Network Topology & Design Goals
+![Packet Tracer Network Topology](screenshot.jpg)
 The topology features an enterprise edge router (`Edge_Router`) dual-homed to two separate Internet Service Providers (`ISP1` and `ISP2`) using point-to-point WAN Serial connections. The layout achieves:
 * **Primary Path Data Flow:** Outbound network traffic favors the high-priority path through `ISP1`.
 * **Dynamic Failure Redundancy:** Floating static routes with an Administrative Distance (AD) of `5` stand ready to instantly carry production workloads via `ISP2` if the primary link physically drops.
@@ -108,4 +109,3 @@ Full end-to-end operations and routing table behavior were validated with the fo
 ### 3. Redundancy Failover Simulation
 * By executing a manual interface shutdown on the primary outbound pipeline interface (`interface Serial0/0/0`), the internal router system safely cleared the dead static routes.
   The `Edge_Router` seamlessly promoted the floating static routes (configured with an AD of 5) into the active routing table matrix, routing user packets through the secondary path via `ISP2` without losing communication channels.
-![Packet Tracer Network Topology](screenshot.jpg)
