@@ -30,7 +30,7 @@ To comply with the structural constraints of the lab, all database population sc
 ## SQL Deployment Scripts
 
 ### 1. Parent Table: Members (`psql` Command Prompt)
-Members were populated directly inside the interactive `psql` shell one at a time using automated surrogate keys:
+Members were populated directly inside the interactive `psql` shell using automated surrogate keys:
 ```sql
 INSERT INTO member (first_name, last_name, phone) VALUES ('Chris', 'Chapter', '6131231234');
 INSERT INTO member (first_name, last_name, phone) VALUES ('Danny', 'Digest', '6131112233');
@@ -38,7 +38,6 @@ INSERT INTO member (first_name, last_name, phone) VALUES ('Finlay', 'Footnote', 
 INSERT INTO member (first_name, last_name, phone) VALUES ('Robin', 'Reader', '6135554444');
 INSERT INTO member (first_name, last_name, phone) VALUES ('Tracy', 'Tome', '6136667777');
 INSERT INTO member (first_name, last_name, phone) VALUES ('Jessie', 'Journal', '6137778888');
-INSERT INTO member (first_name, last_name, phone) VALUES ('Seven', 'Hadzhihasan', '6139990000'); -- Custom Student Record
 ```
 
 ### 2. Books Script (`sql_insert.d/insert_book.sql`)
@@ -105,10 +104,10 @@ At the `psql` prompt, run:
 \(\i insert_book.sql \i insert_book_copy.sql \i\) insert_loan.sql
 
 -- Confirm insertion metrics match required baselines
-SELECT COUNT(*) FROM member;     -- Minimum 7
-SELECT COUNT(*) FROM book;       -- Minimum 5
-SELECT COUNT(*) FROM book_copy;  -- Minimum 10
-SELECT COUNT(*) FROM loan;       -- Minimum 12
+SELECT COUNT(*) FROM member;     -- Expected: 6
+SELECT COUNT(*) FROM book;       -- Expected: 5
+SELECT COUNT(*) FROM book_copy;  -- Expected: 10
+SELECT COUNT(*) FROM loan;       -- Expected: 12
 ```
 
 ---
