@@ -90,7 +90,7 @@ INSERT INTO loan (copy_id, member_id, loan_date, return_date) VALUES
 
 ## Verification
 
-To run these scripts, need access the database `lib_hadz0024`, enter the directory, and execute the files sequentially:
+Database `lib_hadz0024`, enter the directory, and execute the files sequentially:
 
 ```bash
 cd library_db/sql_insert.d
