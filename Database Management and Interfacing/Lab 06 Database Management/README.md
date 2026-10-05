@@ -18,7 +18,6 @@ To comply with the structural constraints of the lab, all database population sc
 ```text
 .
 └── Lab 06 Database Management/
-    ├── README.md
     └── sql_insert.d/
         ├── insert_book.sql
         ├── insert_book_copy.sql
@@ -89,21 +88,21 @@ INSERT INTO loan (copy_id, member_id, loan_date, return_date) VALUES
 
 ---
 
-## Execution & Verification Walkthrough
+## Verification
 
-To run these scripts, access the target terminal database `lib_hadz0024`, enter the directory, and execute the files sequentially:
+To run these scripts, need access the database `lib_hadz0024`, enter the directory, and execute the files sequentially:
 
 ```bash
 cd library_db/sql_insert.d
 psql -d lib_hadz0024
 ```
 
-At the `psql` prompt, run:
+At the `psql` prompt:
 ```sql
 -- Execute files
 \(\i insert_book.sql \i insert_book_copy.sql \i\) insert_loan.sql
 
--- Confirm insertion metrics match required baselines
+-- Confirmirmation:
 SELECT COUNT(*) FROM member;     -- Expected: 6
 SELECT COUNT(*) FROM book;       -- Expected: 5
 SELECT COUNT(*) FROM book_copy;  -- Expected: 10
