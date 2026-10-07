@@ -1,76 +1,90 @@
-# Lab 03 - Basic Internet Services and Automated SSH Configuration
-
+# Lab 1 - Basic Internet Services and Automated SSH Configuration
 ## 📋 Project Overview
-This repository contains the deliverables for Lab 03 of CST8246 (Linux Network Services Administration). 
-The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via `iptables`.
+This repository contains the deliverables for Lab 1 of CST8246 (Linux Network Services Administration). The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via iptables.
 
 ## 🛠️ Network Configuration Details
-* **Server Primary (RED) IP:** `172.16.30.130`
-* **Server Aliased Interface IP:** `172.16.32.130`
-* **Client Workstation IP Subnet:** `172.16.31.0/24`
-* **Admin User Accounts Allowed:** `cst8246`, `abc`
-
----
+* **Server Primary (RED) IP:** 172.16.30.130
+* **Server Aliased Interface IP:** 172.16.32.130
+* **Client Workstation IP Subnet:** 172.16.31.0/24
+* **Mandatory Allowed User Account:** cst8246
 
 ## 💾 Core Deliverables & Scripts
 
-### 1. SSH Automation Script (`ssh.sh`)
-This script automates package validation, implements interface bindings, blocks direct root execution, enforces key-based public authentication methods, and explicitly whitelists valid environment users.
+### 1. SSH Automation Script (setup_ssh.sh)
+* **Storage Location:** `~/setup_ssh.sh` on the **Automation VM**
+* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts daemon access strictly to the mandatory `cst8246` account.
 
 ```bash
-#!/bin/sh
-# CST8246 – OpenSSH Installation and Configuration Automation
+#!/bin/bash
+# CST8246 – setup_ssh.sh
+# Exercise: Automating OpenSSH Installation and Configuration
+# Magic Number: 130
 
+# Define Variables (Step 5 - Part 2)
+ALIAS_IP="172.16.32.130"
+NETMASK="24"
 CONFIG_FILE="/etc/ssh/sshd_config"
 
-echo "=== OpenSSH Server Configuration Automation ==="
-
-# 1. Install/Update OpenSSH packages
+echo "=== 1. Installing OpenSSH Packages ==="
 sudo dnf install -y openssh-server openssh-clients
 
-# 2. Clean out any previous lab blocks to prevent duplicate lines
+echo "=== 2. Configuring Alias IP on Server ==="
+# Automatically finds the server's network interface name and adds the .32 alias
+CONN_NAME=$(nmcli -t -f NAME connection show --active | head -n 1)
+sudo nmcli connection modify "$CONN_NAME" +ipv4.addresses "${ALIAS_IP}/${NETMASK}"
+sudo nmcli connection up "$CONN_NAME"
+
+echo "=== 3. Adjusting SSH Configuration for Security ==="
+# Backup original file
+sudo cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
+
+# Clean out old lab configurations to prevent duplicate lines
 sudo sed -i '/# === CST8246 LAB START ===/,/# === CST8246 LAB END ===/d' "$CONFIG_FILE"
 
-# 3. Append the evaluation requirements to sshd_config
+# Append configuration requirements to sshd_config
 sudo tee -a "$CONFIG_FILE" > /dev/null << EOF
 
 # === CST8246 LAB START ===
-# Listen on all active local interfaces
-# ListenAddress 0.0.0.0
-ListenAddress 172.16.32.130
+# Listen on both active local interfaces
 ListenAddress 172.16.30.130
+ListenAddress 172.16.32.130
 
 # Hardening Configurations
 PermitRootLogin no
-AllowUsers cst8246 abc
+AllowUsers cst8246
 PubkeyAuthentication yes
 PasswordAuthentication no
 # === CST8246 LAB END ===
 EOF
 
-# 4. Validate syntax and restart the service
+echo "=== 4. Enabling and Restarting Services ==="
 sudo sshd -t
 if [ $? -eq 0 ]; then
     sudo systemctl enable sshd
     sudo systemctl restart sshd
-    echo "=== SSH Service successfully automated! ==="
+    echo "=== OpenSSH Setup Complete! ==="
 else
     echo "[!] Configuration syntax error detected."
     exit 1
 fi
 ```
 
-### 2. Network Firewall Rules (`firewall.sh`)
-This script implements strict access management control for inbound system ports, explicitly accepting connections from the client management workspace while rejecting loops and malicious scans.
+### 2. Network Firewall Rules (firewall.sh)
+* **Storage Location:** `~/firewall.sh` on **Server3_SRV**
+* **Description:** This script manages active packet filtration rules via `iptables`, allowing access from the client subnet while explicitly rejecting the alias and primary server networks.
 
 ```bash
 #!/bin/bash
+# CST8246 – firewall.sh
+# Lab 1 Evaluation Checklist Rules
+
 echo "----------------------------------------"
 echo "Configuring firewall policies..."
 echo "----------------------------------------"
 
-# 1. Flush existing rules
+# 1. Flush existing rules and delete custom chains
 iptables -F
+iptables -X
 
 # 2. Set default permissive policies
 iptables -P INPUT ACCEPT
@@ -82,16 +96,16 @@ iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 49999 -j ACCEPT
 iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 
 # --- CURRENT LAB SSH RULES ---
-# Accept connections from client subnet (172.16.31.0/24)
+# 1. ACCEPT connections from the client subnet (172.16.31.0/24)
 iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 22 -j ACCEPT
 
-# Accept connections from alias subnet (172.16.32.0/24)
-iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j ACCEPT
+# 2. REJECT connections from the server alias network (172.16.32.0/24)
+iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j REJECT
 
-# Reject connections from server subnet (172.16.30.0/24)
+# 3. REJECT connections from the server primary subnet (172.16.30.0/24)
 iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 22 -j REJECT
 
-# Block all other incoming SSH traffic for security
+# 4. Block all other incoming SSH traffic for security
 iptables -A INPUT -p tcp --dport 22 -j DROP
 
 # List out the updated rule structure
@@ -101,30 +115,28 @@ echo "----------------------------------------"
 iptables -L -n --line-numbers
 ```
 
----
-
 ## 🔍 Verification & Testing Demonstrations
 
 ### Milestone 1: Interface Binding Proof
-Verify that the `sshd` process is running successfully and actively monitoring both local interface addresses.
+Verify that the `sshd` process is running successfully and actively monitoring both localized interface sockets.
 ```bash
-sudo ss -ltpn | grep :22
+netstat -tpan | grep ":22"
 ```
 
 ### Milestone 2: Active Firewall Policies
-Verify that the iptables filter rules are active and blocking target networks.
+Verify that the `iptables` filter rules match the required accept/reject hierarchy.
 ```bash
 sudo iptables -L INPUT -n --line-numbers
 ```
 
 ### Milestone 3: Key-Based Passwordless Authentication
-Confirming that a standard remote connection from the Client terminal (`172.16.31.130`) to the Server Aliased IP (`172.16.32.130`) maps successfully without prompting for a user account password password verification sequence.
+Confirming that a standard remote connection from the Client terminal (`Linux3_CLT`) to the Server Aliased IP (`172.16.32.130`) authenticates cleanly via keys without prompting for a user account password.
 ```bash
 ssh cst8246@172.16.32.130
 ```
 
 ### Milestone 4: Administrative Root Hardening Test
-Confirming that direct root administrative shell sessions are denied globally.
+Confirming that direct root administrative shell sessions are denied globally by security policy.
 ```bash
 ssh root@172.16.32.130
 # Output: Permission denied (publickey).
