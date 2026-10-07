@@ -36,7 +36,9 @@ sudo tee -a "$CONFIG_FILE" > /dev/null << EOF
 
 # === CST8246 LAB START ===
 # Listen on all active local interfaces
-ListenAddress 0.0.0.0
+# ListenAddress 0.0.0.0
+ListenAddress 172.16.32.130
+ListenAddress 172.16.30.130
 
 # Hardening Configurations
 PermitRootLogin no
@@ -63,7 +65,6 @@ This script implements strict access management control for inbound system ports
 
 ```bash
 #!/bin/bash
-# This script sets firewall rules for CST8246 Demo
 echo "----------------------------------------"
 echo "Configuring firewall policies..."
 echo "----------------------------------------"
@@ -76,7 +77,7 @@ iptables -P INPUT ACCEPT
 iptables -P FORWARD ACCEPT
 iptables -P OUTPUT ACCEPT
 
-# --- PREVIOUS LAB RULES ---
+# --- LAB_02 RULES ---
 iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 49999 -j ACCEPT
 iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 
@@ -84,8 +85,11 @@ iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 # Accept connections from client subnet (172.16.31.0/24)
 iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 22 -j ACCEPT
 
-# Reject connections from server/alias subnet (172.16.32.0/24)
-iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j REJECT
+# Accept connections from alias subnet (172.16.32.0/24)
+iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j ACCEPT
+
+# Reject connections from server subnet (172.16.30.0/24)
+iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 22 -j REJECT
 
 # Block all other incoming SSH traffic for security
 iptables -A INPUT -p tcp --dport 22 -j DROP
