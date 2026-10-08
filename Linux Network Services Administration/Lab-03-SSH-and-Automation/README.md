@@ -12,7 +12,7 @@ This repository contains the deliverables for Lab 3 of CST8246 (Linux Network Se
 
 ### 1. SSH Automation Script (setup_ssh.sh)
 * **Storage Location:** `~/setup_ssh.sh` on the **Automation VM**
-* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts. Allow access strictly to the mandatory `cst8246` account.
+* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts.
 
 ```bash
 #!/bin/sh
@@ -57,8 +57,8 @@ else
 fi
 ```
 
-### 2. Network Firewall Rules (firewall.sh)
-* **Storage Location:** `~/firewall.sh` on **Server3_SRV**
+### 2. Network Firewall Rules (FWrules.sh)
+* **Storage Location:** `~/FWrules.sh` on **Server3_SRV**
 * **Description:** This script manages active packet filtration rules via `iptables`, allowing access from the client subnet while explicitly rejecting the alias and primary server networks.
 
 ```bash
