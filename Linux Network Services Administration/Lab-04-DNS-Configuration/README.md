@@ -36,7 +36,7 @@ zone "16.172.in-addr.arpa" IN {
     file "named.16.172";
     allow-transfer { 172.16.31.130; };
 };
-
+```
 ---
 
 ## 🧪 Verification Diagnostics
