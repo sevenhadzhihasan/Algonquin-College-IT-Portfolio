@@ -1,6 +1,6 @@
 # Lab 1 - Basic Internet Services and Automated SSH Configuration
 ## 📋 Project Overview
-This repository contains the deliverables for Lab 1 of CST8246 (Linux Network Services Administration). The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via iptables.
+This repository contains the deliverables for Lab 3 of CST8246 (Linux Network Services Administration). The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via iptables by Automation Server.
 
 ## 🛠️ Network Configuration Details
 * **Server Primary (RED) IP:** 172.16.30.130
@@ -12,42 +12,30 @@ This repository contains the deliverables for Lab 1 of CST8246 (Linux Network Se
 
 ### 1. SSH Automation Script (setup_ssh.sh)
 * **Storage Location:** `~/setup_ssh.sh` on the **Automation VM**
-* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts daemon access strictly to the mandatory `cst8246` account.
+* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts. Allow access strictly to the mandatory `cst8246` account.
 
 ```bash
-#!/bin/bash
-# CST8246 – setup_ssh.sh
-# Exercise: Automating OpenSSH Installation and Configuration
-# Magic Number: 130
+#!/bin/sh
+# CST8246 – OpenSSH Installation and Configuration Automation
 
-# Define Variables (Step 5 - Part 2)
-ALIAS_IP="172.16.32.130"
-NETMASK="24"
 CONFIG_FILE="/etc/ssh/sshd_config"
 
-echo "=== 1. Installing OpenSSH Packages ==="
+echo "=== OpenSSH Server Configuration Automation ==="
+
+# 1. Install/Update OpenSSH packages
 sudo dnf install -y openssh-server openssh-clients
 
-echo "=== 2. Configuring Alias IP on Server ==="
-# Automatically finds the server's network interface name and adds the .32 alias
-CONN_NAME=$(nmcli -t -f NAME connection show --active | head -n 1)
-sudo nmcli connection modify "$CONN_NAME" +ipv4.addresses "${ALIAS_IP}/${NETMASK}"
-sudo nmcli connection up "$CONN_NAME"
-
-echo "=== 3. Adjusting SSH Configuration for Security ==="
-# Backup original file
-sudo cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
-
-# Clean out old lab configurations to prevent duplicate lines
+# 2. Clean out any previous lab blocks to prevent duplicate lines
 sudo sed -i '/# === CST8246 LAB START ===/,/# === CST8246 LAB END ===/d' "$CONFIG_FILE"
 
-# Append configuration requirements to sshd_config
+# 3. Append the evaluation requirements to sshd_config
 sudo tee -a "$CONFIG_FILE" > /dev/null << EOF
 
 # === CST8246 LAB START ===
-# Listen on both active local interfaces
-ListenAddress 172.16.30.130
+# Listen on all active local interfaces (Fulfills RED and Aliased requirement)
+# ListenAddress 0.0.0.0
 ListenAddress 172.16.32.130
+ListenAddress 172.16.30.130
 
 # Hardening Configurations
 PermitRootLogin no
@@ -57,12 +45,12 @@ PasswordAuthentication no
 # === CST8246 LAB END ===
 EOF
 
-echo "=== 4. Enabling and Restarting Services ==="
+# 4. Validate syntax and restart the service
 sudo sshd -t
 if [ $? -eq 0 ]; then
     sudo systemctl enable sshd
     sudo systemctl restart sshd
-    echo "=== OpenSSH Setup Complete! ==="
+    echo "=== SSH Service successfully automated! ==="
 else
     echo "[!] Configuration syntax error detected."
     exit 1
@@ -75,9 +63,6 @@ fi
 
 ```bash
 #!/bin/bash
-# CST8246 – firewall.sh
-# Lab 1 Evaluation Checklist Rules
-
 echo "----------------------------------------"
 echo "Configuring firewall policies..."
 echo "----------------------------------------"
@@ -99,7 +84,7 @@ iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 # 1. ACCEPT connections from the client subnet (172.16.31.0/24)
 iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 22 -j ACCEPT
 
-# 2. REJECT connections from the server alias network (172.16.32.0/24)
+# 2. REJECT connections from the server alias network (172.16.32.0/24) - MATCHES PROF'S LINE 237
 iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j REJECT
 
 # 3. REJECT connections from the server primary subnet (172.16.30.0/24)
