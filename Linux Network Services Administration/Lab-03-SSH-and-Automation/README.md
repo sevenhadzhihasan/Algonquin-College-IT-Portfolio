@@ -12,7 +12,8 @@ This repository contains the deliverables for Lab 3 of CST8246 (Linux Network Se
 
 ### 1. SSH Automation Script (setup_ssh.sh)
 * **Storage Location:** `~/setup_ssh.sh` on the **Automation VM**
-* **Description:** This script automates package validation, implements dual-interface bindings, disables root access, enforces public key authentication, and restricts.
+* **Description: This script automates text-level package validation and security adjustments within /etc/ssh/sshd_config. It programmatically binds the daemon socket paths to both active system interfaces (172.16.30.130 and 172.16.32.130), disables administrative root execution over the network, completely enforces secure public key-based cryptographic authentication methods, and restricts all incoming environment connection privileges strictly to the mandatory cst8246 user profile account, completely turning off vulnerable password-based logins [CST8246].
+
 
 ```bash
 #!/bin/sh
