@@ -67,5 +67,5 @@ dig @172.16.30.130 www.google.ca +short
 
 ## 🚀 Lab Outcomes
 * Successfully automated cross-subnet BIND package deployments.
-* Enforced structural integrity bounds using **Glue Records** to eliminate circular dependency loops.
+* Enforced structural integrity bounds using records to eliminate circular dependency loops.
 * Set up strict access control recursion matrices, allowing local segments while securing port 53 bindings.
