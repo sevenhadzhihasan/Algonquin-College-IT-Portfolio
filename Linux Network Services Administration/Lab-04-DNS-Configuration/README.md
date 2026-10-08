@@ -49,7 +49,7 @@ sudo named-checkzone "example130.lab" "/etc/named/fwd.example130.lab"
 ```
 
 ### 2. Master Server Resolution Tests (`172.16.30.130`)
-Execute from the Master node or any host in the allowed subnet to verify record mapping:
+Run from the Master node or any host in the allowed subnet to verify record mapping:
 
 ```bash
 # 1. Verify Master Server Forward Host Record
@@ -73,7 +73,7 @@ dig @172.16.30.130 www.google.ca +short
 ```
 
 ### 3. Slave Node Replication & Resolution Tests (`172.16.31.130`)
-Execute directly on the Client/Slave VM:
+Run directly on the Client/Slave VM:
 
 ```bash
 # 1. Prove zone transfer files exist locally in storage
