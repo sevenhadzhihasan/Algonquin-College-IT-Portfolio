@@ -36,32 +36,55 @@ zone "16.172.in-addr.arpa" IN {
     file "named.16.172";
     allow-transfer { 172.16.31.130; };
 };
-```
 
 ---
 
 ## 🧪 Verification Diagnostics
 
-### 1. Forward Zone Structural Integrity Check
+### 1. Configuration & Zone File Validation
 ```bash
+# Verify Master forward zone configuration syntax
 sudo named-checkzone "example130.lab" "/etc/named/fwd.example130.lab"
 # Expected Output: zone example130.lab/IN: loaded serial 2026100803 OK
 ```
 
-### 2. Live Replication Validation Audit (Executed on Slave)
-```bash
-sudo ls -l /var/named/slaves/
-# Expected Output:
-# -rw-r--r-- 1 named named 480 Oct 8 12:33 fwd.example130.lab.db
-# -rw-r--r-- 1 named named 514 Oct 8 12:33 named.16.172.db
-```
+### 2. Master Server Resolution Tests (`172.16.30.130`)
+Execute from the Master node or any host in the allowed subnet to verify record mapping:
 
-### 3. Network Lookup Query Resolution
 ```bash
+# 1. Verify Master Server Forward Host Record
+dig @172.16.30.130 hadz0024-SRV.example130.lab +short
+# Expected: 172.16.30.130
+
+# 2. Verify Client Forward Host Record via Master
+dig @172.16.30.130 hadz0024-CLT.example130.lab +short
+# Expected: 172.16.31.130
+
+# 3. Verify Lab Required FTP Alias / Host Record
 dig @172.16.30.130 ftp.example130.lab +short
-# Returns: 172.16.32.130
+# Expected: 172.16.32.130
 
+# 4. Verify Reverse Lookup Mappings (PTR Record)
+dig @172.16.30.130 -x 172.16.30.130 +short
+# Expected: hadz0024-SRV.example130.lab.
+
+# 5. Verify External Recursive Caching Layer
 dig @172.16.30.130 www.google.ca +short
-# Status: NOERROR (Recursive caching layer success)
 ```
 
+### 3. Slave Node Replication & Resolution Tests (`172.16.31.130`)
+Execute directly on the Client/Slave VM:
+
+```bash
+# 1. Prove zone transfer files exist locally in storage
+sudo ls -l /var/named/slaves/
+# Expected: fwd.example130.lab.db and named.16.172.db populated
+
+# 2. Query the Slave server directly for local nameserver resolution
+dig @172.16.31.130 ns2.example130.lab +short
+# Expected: 172.16.31.130
+
+# 3. Query the Slave server for Master nameserver information
+dig @172.16.31.130 ns1.example130.lab +short
+# Expected: 172.16.30.130
+```
