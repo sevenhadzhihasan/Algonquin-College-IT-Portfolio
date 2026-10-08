@@ -65,7 +65,3 @@ dig @172.16.30.130 www.google.ca +short
 # Status: NOERROR (Recursive caching layer success)
 ```
 
-## 🚀 Lab Outcomes
-* Successfully automated cross-subnet BIND package deployments.
-* Eliminated DNS resolution loops by implementing glue records for custom authoritative nameservers.
-* Set up strict access control recursion matrices, allowing local segments while securing port 53 bindings.
