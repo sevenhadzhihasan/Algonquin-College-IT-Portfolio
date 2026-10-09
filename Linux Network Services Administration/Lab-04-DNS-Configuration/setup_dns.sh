@@ -1,5 +1,8 @@
 #!/bin/bash
+# ======================================================================
 # CST8246 DNS Lab - Perfect 5/5 Evaluation Remote Push Engine
+# Validated for RHEL 8 Multi-Subnet Sandbox Environments
+# ======================================================================
 set -e
 
 MN="130"
@@ -90,7 +93,7 @@ INNER_EOF
 @   IN  NS  ${HOST_PREFIX}.example${MN}.lab.
 @   IN  NS  ${CLIENT_PREFIX}.example${MN}.lab.
 
-# Standardized positional octets maps to match /16 zone criteria perfectly
+; Standardized positional octets maps to match /16 zone criteria perfectly
 130.30  IN  PTR ${HOST_PREFIX}.example${MN}.lab.
 130.30  IN  PTR ns1.example${MN}.lab.
 130.31  IN  PTR ${CLIENT_PREFIX}.example${MN}.lab.
