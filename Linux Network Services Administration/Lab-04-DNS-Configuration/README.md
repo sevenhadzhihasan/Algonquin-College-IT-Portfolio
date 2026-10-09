@@ -1,55 +1,64 @@
 # Lab 04: DNS - Master, Slave, Caching, and Authoritative Name Server Configuration
 
 ## 📌 Project Overview
-This repository contains the blueprints and automation engine used to design and deploy a complete DNS infrastructure within a Red Hat Enterprise Linux 8 (RHEL 8) multi-subnet sandbox. The project implements a **Master Authoritative Server**, a **Slave Replication Node**, and cross-subnet data propagation blocks designed to prevent lookup loop errors.
+This repository contains the blueprints and automation engine used to design and deploy a complete DNS infrastructure within a Red Hat Enterprise Linux 8 (RHEL 8) multi-subnet sandbox. The project implements a Master Authoritative Server, a Slave Replication Node, and cross-subnet data propagation blocks designed to prevent lookup loop errors.
 
 ## 🗺️ Architectural Mapping
-* **Domain Context Name:** `example130.lab`
-* **Master Server VM (`Server3_SRV`):** `172.16.30.130` (Host: `hadz0024-SRV`)
-* **Slave Client VM (`Linux3_CLT`):** `172.16.31.130` (Host: `hadz0024-CLT`)
-* **Isolated Virtual Network Segment:** `172.16.32.130` (Target: `ftp.example130.lab`)
-
----
+*   **Domain Context Name:** example130.lab
+*   **Master Server VM (Server3_SRV):** 172.16.30.130 (Host: hadz0024-SRV)
+*   **Slave Client VM (Linux3_CLT):** 172.16.31.130 (Host: hadz0024-CLT)
+*   **Isolated Virtual Network Segment:** 172.16.32.130 (Target: ftp.example130.lab)
 
 ## 🛠️ Main Infrastructure Configurations
 
 ### 🖥️ Master Configuration Block (`/etc/named.conf`)
-```named
+```text
 options {
     listen-on port 53 { 127.0.0.1; any; };
     directory       "/var/named";
     dump-file       "/var/named/data/cache_dump.db";
+    statistics-file "/var/named/data/named_stats.txt";
+    memstatistics-file "/var/named/data/named_mem_stats.txt";
     allow-query     { any; };
     allow-recursion { 127.0.0.1; 172.16.30.0/24; 172.16.31.0/24; };
     recursion yes;
     dnssec-validation no;
 };
 
+zone "." IN { type hint; file "named.ca"; };
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
 zone "example130.lab" IN {
     type master;
-    file "/etc/named/fwd.example130.lab";
+    file "/var/named/fwd.example130.lab";
     allow-transfer { 172.16.31.130; };
+    also-notify { 172.16.31.130; };
 };
 
 zone "16.172.in-addr.arpa" IN {
     type master;
-    file "named.16.172";
+    file "/var/named/named.16.172";
     allow-transfer { 172.16.31.130; };
+    also-notify { 172.16.31.130; };
 };
 ```
----
 
 ## 🧪 Verification Diagnostics
 
 ### 1. Configuration & Zone File Validation
 ```bash
 # Verify Master forward zone configuration syntax
-sudo named-checkzone "example130.lab" "/etc/named/fwd.example130.lab"
-# Expected Output: zone example130.lab/IN: loaded serial 2026100803 OK
+sudo named-checkzone "example130.lab" "/var/named/fwd.example130.lab"
+# Expected Output: zone example130.lab/IN: loaded serial 2026100901 OK
+
+# Verify Master reverse zone configuration syntax
+sudo named-checkzone "16.172.in-addr.arpa" "/var/named/named.16.172"
+# Expected Output: zone 16.172.in-addr.arpa/IN: loaded serial 2026100901 OK
 ```
 
 ### 2. Master Server Resolution Tests (`172.16.30.130`)
-Run from the Master node or any host in the allowed subnet to verify record mapping:
+*Run from the Client/Slave node or any host in an allowed subnet to verify record mapping:*
 
 ```bash
 # 1. Verify Master Server Forward Host Record
@@ -70,10 +79,11 @@ dig @172.16.30.130 -x 172.16.30.130 +short
 
 # 5. Verify External Recursive Caching Layer
 dig @172.16.30.130 www.google.ca +short
+# Expected: Active global public IP addresses passing through forwarder
 ```
 
 ### 3. Slave Node Replication & Resolution Tests (`172.16.31.130`)
-Run directly on the Client/Slave VM:
+*Run directly on the Client/Slave VM terminal workspace:*
 
 ```bash
 # 1. Prove zone transfer files exist locally in storage
