@@ -1,0 +1,406 @@
+
+================================================================================
+
+ Device: 192.168.70.154
+
+================================================================================
+
++--------------------------------------------------------------------------------
+|Command: show version | include uptime
++--------------------------------------------------------------------------------
+hadz0024-EDGE uptime is 1 hour, 36 minutes
++--------------------------------------------------------------------------------
+|Command: show users
++--------------------------------------------------------------------------------
+    Line       User       Host(s)              Idle       Location
+   0 con 0                idle                 00:03:22   
+*  2 vty 0     admin      idle                 00:00:00 192.168.70.1
+
+  Interface    User               Mode         Idle     Peer Address
+
++--------------------------------------------------------------------------------
+|Command: show tcp brief
++--------------------------------------------------------------------------------
+TCB       Local Address               Foreign Address             (state)
+79FCFF2B43A8  192.168.70.154.22          192.168.70.1.58409          ESTAB
+------------  0.0.0.0.22                 *.*                         LISTEN
+------------  ::.22                      *.*                         LISTEN
++--------------------------------------------------------------------------------
+|Command: show ip interface brief | exclude unassigned
++--------------------------------------------------------------------------------
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            192.168.70.154  YES DHCP   up                    up      
+Ethernet0/1            203.0.113.1     YES TFTP   up                    up      
+Ethernet0/2            10.12.12.1      YES manual up                    up      
+Ethernet0/3            10.12.13.1      YES manual up                    up      
+Loopback100            10.12.100.1     YES manual up                    up      
+
++--------------------------------------------------------------------------------
+|Command: show ip ospf | include Routing Process|Router ID|Reference
++--------------------------------------------------------------------------------
+ Routing Process "ospf 12" with ID 10.12.100.1
+ Reference bandwidth unit is 10000 mbps
++--------------------------------------------------------------------------------
+|Command: show ip ospf neighbor
++--------------------------------------------------------------------------------
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       0   FULL/  -        00:00:31    10.12.13.3      Ethernet0/3
+10.12.100.2       0   FULL/  -        00:00:31    10.12.12.2      Ethernet0/2
++--------------------------------------------------------------------------------
+|Command: show ip ospf interface brief
++--------------------------------------------------------------------------------
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.1/32     1     LOOP  0/0
+Et0/3        12    0               10.12.13.1/29      10    P2P   1/1
+Et0/2        12    0               10.12.12.1/29      10    P2P   1/1
++--------------------------------------------------------------------------------
+|Command: show ip route ospf
++--------------------------------------------------------------------------------
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP
+       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       H - NHRP, G - NHRP registered, g - NHRP registration summary
+       o - ODR, P - periodic downloaded static route, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+       & - replicated local route overrides by connected
+
+Gateway of last resort is 203.0.113.254 to network 0.0.0.0
+
+      10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
+O        10.12.20.0/24 [110/30] via 10.12.13.3, 00:23:29, Ethernet0/3
+                       [110/30] via 10.12.12.2, 00:11:03, Ethernet0/2
+O        10.12.30.1/32 [110/11] via 10.12.13.3, 00:23:45, Ethernet0/3
+O        10.12.100.2/32 [110/11] via 10.12.12.2, 00:11:03, Ethernet0/2
+O        10.12.100.3/32 [110/11] via 10.12.13.3, 00:23:45, Ethernet0/3
+O        10.12.100.4/32 [110/21] via 10.12.13.3, 00:23:36, Ethernet0/3
+                        [110/21] via 10.12.12.2, 00:11:03, Ethernet0/2
+O        10.12.234.0/29 [110/20] via 10.12.13.3, 00:23:36, Ethernet0/3
+                        [110/20] via 10.12.12.2, 00:11:03, Ethernet0/2
+================================================================================
+
+ Device: 192.168.70.155
+
+================================================================================
+
++--------------------------------------------------------------------------------
+|Command: show version | include uptime
++--------------------------------------------------------------------------------
+hadz0024-CORE uptime is 1 hour, 36 minutes
++--------------------------------------------------------------------------------
+|Command: show users
++--------------------------------------------------------------------------------
+    Line       User       Host(s)              Idle       Location
+   0 con 0                idle                 00:02:50   
+*  2 vty 0     admin      idle                 00:00:00 192.168.70.1
+
+  Interface    User               Mode         Idle     Peer Address
+
++--------------------------------------------------------------------------------
+|Command: show tcp brief
++--------------------------------------------------------------------------------
+TCB       Local Address               Foreign Address             (state)
+759F929CCE98  192.168.70.155.22          192.168.70.1.58415          ESTAB
+------------  0.0.0.0.22                 *.*                         LISTEN
+------------  ::.22                      *.*                         LISTEN
++--------------------------------------------------------------------------------
+|Command: show ip interface brief | exclude unassigned
++--------------------------------------------------------------------------------
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            192.168.70.155  YES DHCP   up                    up      
+Ethernet0/1            10.12.12.2      YES manual up                    up      
+Ethernet0/2            10.12.234.2     YES manual up                    up      
+Loopback100            10.12.100.2     YES manual up                    up      
+
++--------------------------------------------------------------------------------
+|Command: show ip ospf | include Routing Process|Router ID|Reference
++--------------------------------------------------------------------------------
+ Routing Process "ospf 12" with ID 10.12.100.2
+ Reference bandwidth unit is 10000 mbps
++--------------------------------------------------------------------------------
+|Command: show ip ospf neighbor
++--------------------------------------------------------------------------------
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:31    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:38    10.12.234.4     Ethernet0/2
+10.12.100.1       0   FULL/  -        00:00:38    10.12.12.1      Ethernet0/1
++--------------------------------------------------------------------------------
+|Command: show ip ospf interface brief
++--------------------------------------------------------------------------------
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.2/32     1     LOOP  0/0
+Et0/2        12    0               10.12.234.2/29     10    DROTH 2/2
+Et0/1        12    0               10.12.12.2/29      10    P2P   1/1
++--------------------------------------------------------------------------------
+|Command: show ip route ospf
++--------------------------------------------------------------------------------
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP
+       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       H - NHRP, G - NHRP registered, g - NHRP registration summary
+       o - ODR, P - periodic downloaded static route, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+       & - replicated local route overrides by connected
+
+Gateway of last resort is 10.12.12.1 to network 0.0.0.0
+
+O*E2  0.0.0.0/0 [110/1] via 10.12.12.1, 00:11:06, Ethernet0/1
+      10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
+O        10.12.13.0/29 [110/20] via 10.12.234.3, 00:23:38, Ethernet0/2
+                       [110/20] via 10.12.12.1, 00:08:03, Ethernet0/1
+O        10.12.20.0/24 [110/20] via 10.12.234.4, 00:23:31, Ethernet0/2
+O        10.12.30.1/32 [110/11] via 10.12.234.3, 00:23:42, Ethernet0/2
+O        10.12.100.1/32 [110/11] via 10.12.12.1, 00:08:03, Ethernet0/1
+O        10.12.100.3/32 [110/11] via 10.12.234.3, 00:23:42, Ethernet0/2
+O        10.12.100.4/32 [110/11] via 10.12.234.4, 00:23:42, Ethernet0/2
++--------------------------------------------------------------------------------
+|Command: show ip route 10.12.100.1 255.255.255.255
++--------------------------------------------------------------------------------
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 11, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:08:04 ago
+  Routing Descriptor Blocks:
+  * 10.12.12.1, from 10.12.100.1, 00:08:04 ago, via Ethernet0/1
+      Route metric is 11, traffic share count is 1
++--------------------------------------------------------------------------------
+|Command: show ip cef 10.12.100.1
++--------------------------------------------------------------------------------
+10.12.100.1/32
+  nexthop 10.12.12.1 Ethernet0/1
+================================================================================
+
+ Device: 192.168.70.156
+
+================================================================================
+
++--------------------------------------------------------------------------------
+|Command: show version | include uptime
++--------------------------------------------------------------------------------
+hadz0024-DIST uptime is 1 hour, 36 minutes
++--------------------------------------------------------------------------------
+|Command: show users
++--------------------------------------------------------------------------------
+    Line       User       Host(s)              Idle       Location
+   0 con 0                idle                 00:02:33   
+*  2 vty 0     admin      idle                 00:00:00 192.168.70.1
+
+  Interface    User               Mode         Idle     Peer Address
+
++--------------------------------------------------------------------------------
+|Command: show tcp brief
++--------------------------------------------------------------------------------
+TCB       Local Address               Foreign Address             (state)
+7A337ADC0D68  192.168.70.156.22          192.168.70.1.58416          ESTAB
+------------  0.0.0.0.22                 *.*                         LISTEN
+------------  ::.22                      *.*                         LISTEN
++--------------------------------------------------------------------------------
+|Command: show ip interface brief | exclude unassigned
++--------------------------------------------------------------------------------
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            192.168.70.156  YES DHCP   up                    up      
+Ethernet0/1            10.12.13.3      YES manual up                    up      
+Ethernet0/2            10.12.234.3     YES manual up                    up      
+Loopback30             10.12.30.1      YES manual up                    up      
+Loopback100            10.12.100.3     YES manual up                    up      
+
++--------------------------------------------------------------------------------
+|Command: show ip ospf | include Routing Process|Router ID|Reference
++--------------------------------------------------------------------------------
+ Routing Process "ospf 12" with ID 10.12.100.3
+ Reference bandwidth unit is 10000 mbps
++--------------------------------------------------------------------------------
+|Command: show ip ospf neighbor
++--------------------------------------------------------------------------------
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.1       0   FULL/  -        00:00:32    10.12.13.1      Ethernet0/1
+10.12.100.2       1   FULL/DROTHER    00:00:30    10.12.234.2     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:35    10.12.234.4     Ethernet0/2
++--------------------------------------------------------------------------------
+|Command: show ip ospf interface brief
++--------------------------------------------------------------------------------
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.3/32     1     LOOP  0/0
+Lo30         12    0               10.12.30.1/32      1     LOOP  0/0
+Et0/1        12    0               10.12.13.3/29      10    P2P   1/1
+Et0/2        12    0               10.12.234.3/29     10    BDR   2/2
++--------------------------------------------------------------------------------
+|Command: show ip route ospf
++--------------------------------------------------------------------------------
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP
+       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       H - NHRP, G - NHRP registered, g - NHRP registration summary
+       o - ODR, P - periodic downloaded static route, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+       & - replicated local route overrides by connected
+
+Gateway of last resort is 10.12.13.1 to network 0.0.0.0
+
+O*E2  0.0.0.0/0 [110/1] via 10.12.13.1, 00:32:54, Ethernet0/1
+      10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
+O        10.12.12.0/29 [110/20] via 10.12.234.2, 00:08:05, Ethernet0/2
+                       [110/20] via 10.12.13.1, 00:11:13, Ethernet0/1
+O        10.12.20.0/24 [110/20] via 10.12.234.4, 00:23:34, Ethernet0/2
+O        10.12.100.1/32 [110/11] via 10.12.13.1, 00:23:40, Ethernet0/1
+O        10.12.100.2/32 [110/11] via 10.12.234.2, 00:23:40, Ethernet0/2
+O        10.12.100.4/32 [110/11] via 10.12.234.4, 00:23:40, Ethernet0/2
++--------------------------------------------------------------------------------
+|Command: show ip route 0.0.0.0
++--------------------------------------------------------------------------------
+Routing entry for 0.0.0.0/0, supernet
+  Known via "ospf 12", distance 110, metric 1, candidate default path
+  Tag 12, type extern 2, forward metric 10
+  Last update from 10.12.13.1 on Ethernet0/1, 00:32:55 ago
+  Routing Descriptor Blocks:
+  * 10.12.13.1, from 10.12.100.1, 00:32:55 ago, via Ethernet0/1
+      Route metric is 1, traffic share count is 1
+      Route tag 12
+================================================================================
+
+ Device: 192.168.70.157
+
+================================================================================
+
++--------------------------------------------------------------------------------
+|Command: show version | include uptime
++--------------------------------------------------------------------------------
+hadz0024-ACCESS uptime is 1 hour, 36 minutes
++--------------------------------------------------------------------------------
+|Command: show users
++--------------------------------------------------------------------------------
+    Line       User       Host(s)              Idle       Location
+   0 con 0                idle                 00:02:15   
+*  2 vty 0     admin      idle                 00:00:00 192.168.70.1
+
+  Interface    User               Mode         Idle     Peer Address
+
++--------------------------------------------------------------------------------
+|Command: show tcp brief
++--------------------------------------------------------------------------------
+TCB       Local Address               Foreign Address             (state)
+714ECFFDDA48  192.168.70.157.22          192.168.70.1.58417          ESTAB
+------------  0.0.0.0.22                 *.*                         LISTEN
+------------  ::.22                      *.*                         LISTEN
++--------------------------------------------------------------------------------
+|Command: show ip interface brief | exclude unassigned
++--------------------------------------------------------------------------------
+Interface              IP-Address      OK? Method Status                Protocol
+Ethernet0/0            192.168.70.157  YES DHCP   up                    up      
+Ethernet0/1            10.12.234.4     YES manual up                    up      
+Ethernet0/3            10.12.20.1      YES manual up                    up      
+Loopback100            10.12.100.4     YES manual up                    up      
+
++--------------------------------------------------------------------------------
+|Command: show ip ospf | include Routing Process|Router ID|Reference
++--------------------------------------------------------------------------------
+ Routing Process "ospf 12" with ID 10.12.100.4
+ Reference bandwidth unit is 10000 mbps
++--------------------------------------------------------------------------------
+|Command: show ip ospf neighbor
++--------------------------------------------------------------------------------
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:38    10.12.234.2     Ethernet0/1
+10.12.100.3       1   FULL/BDR        00:00:36    10.12.234.3     Ethernet0/1
++--------------------------------------------------------------------------------
+|Command: show ip ospf interface brief
++--------------------------------------------------------------------------------
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.4/32     1     LOOP  0/0
+Et0/1        12    0               10.12.234.4/29     10    DR    2/2
+Et0/3        12    0               10.12.20.1/24      10    DR    0/0
++--------------------------------------------------------------------------------
+|Command: show ip ospf interface Ethernet0/3 | include Network Type|State|Passive|No Hellos
++--------------------------------------------------------------------------------
+  Process ID 12, Router ID 10.12.100.4, Network Type BROADCAST, Cost: 10
+  Transmit Delay is 1 sec, State DR, Priority 1
+    No Hellos (Passive interface) 
++--------------------------------------------------------------------------------
+|Command: show ip route ospf
++--------------------------------------------------------------------------------
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area 
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP
+       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       H - NHRP, G - NHRP registered, g - NHRP registration summary
+       o - ODR, P - periodic downloaded static route, l - LISP
+       a - application route
+       + - replicated route, % - next hop override, p - overrides from PfR
+       & - replicated local route overrides by connected
+
+Gateway of last resort is 10.12.234.3 to network 0.0.0.0
+
+O*E2  0.0.0.0/0 [110/1] via 10.12.234.3, 00:32:57, Ethernet0/1
+                [110/1] via 10.12.234.2, 00:08:08, Ethernet0/1
+      10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
+O        10.12.12.0/29 [110/20] via 10.12.234.2, 00:08:08, Ethernet0/1
+O        10.12.13.0/29 [110/20] via 10.12.234.3, 00:23:37, Ethernet0/1
+O        10.12.30.1/32 [110/11] via 10.12.234.3, 00:23:37, Ethernet0/1
+O        10.12.100.1/32 [110/21] via 10.12.234.3, 00:23:37, Ethernet0/1
+                        [110/21] via 10.12.234.2, 00:08:08, Ethernet0/1
+O        10.12.100.2/32 [110/11] via 10.12.234.2, 00:23:37, Ethernet0/1
+O        10.12.100.3/32 [110/11] via 10.12.234.3, 00:23:37, Ethernet0/1
++--------------------------------------------------------------------------------
+|Command: show ip route 0.0.0.0
++--------------------------------------------------------------------------------
+Routing entry for 0.0.0.0/0, supernet
+  Known via "ospf 12", distance 110, metric 1, candidate default path
+  Tag 12, type extern 2, forward metric 20
+  Last update from 10.12.234.2 on Ethernet0/1, 00:08:08 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:32:57 ago, via Ethernet0/1
+      Route metric is 1, traffic share count is 1
+      Route tag 12
+    10.12.234.2, from 10.12.100.1, 00:08:08 ago, via Ethernet0/1
+      Route metric is 1, traffic share count is 1
+      Route tag 12
++--------------------------------------------------------------------------------
+|Command: show ip route 10.12.100.1 255.255.255.255
++--------------------------------------------------------------------------------
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.2 on Ethernet0/1, 00:08:08 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:23:37 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+    10.12.234.2, from 10.12.100.1, 00:08:08 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
++--------------------------------------------------------------------------------
+|Command: ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
++--------------------------------------------------------------------------------
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms
++--------------------------------------------------------------------------------
+|Command: ping 10.12.100.1 source Ethernet0/3 repeat 3 timeout 1
++--------------------------------------------------------------------------------
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 10.12.100.1, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms
+********************************************************************************
+*  END OF DATA COLLECTION
+********************************************************************************

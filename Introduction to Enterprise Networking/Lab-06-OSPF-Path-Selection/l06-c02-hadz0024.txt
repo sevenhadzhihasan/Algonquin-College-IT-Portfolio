@@ -1,0 +1,241 @@
+!-- LAB: l06   CHECKPOINT: C02   STUDENT:hadz0024            U:12
+!-- Paste the prompt, command, and unedited output under each router.
+
+!-- ==========================================================
+!-- C02 INCUMBENT: ELECTION, FIRST DR
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:36    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:36    10.12.234.4     Ethernet0/2
+10.12.100.1       1   FULL/BDR        00:00:32    10.12.12.1      Ethernet0/1
+hadz0024-CORE#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State DROTHER, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.3  (Backup Designated Router)
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:36    10.12.234.2     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:32    10.12.234.4     Ethernet0/2
+hadz0024-DIST#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State BDR, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:38    10.12.234.2     Ethernet0/1
+10.12.100.3       1   FULL/BDR        00:00:34    10.12.234.3     Ethernet0/1
+hadz0024-ACCESS#$f interface Ethernet0/1 | include State|Priority|Designated 
+  Transmit Delay is 1 sec, State DR, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.3  (Backup Designated Router)
+
+
+!-- END C02 INCUMBENT
+
+
+!-- ==========================================================
+!-- C02 PRIORITY: ELECTION, HIGHER PRIORITY ARRIVES
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:32    10.12.234.3     Ethernet0/2
+10.12.100.4     200   FULL/DR         00:00:33    10.12.234.4     Ethernet0/2
+10.12.100.1       1   FULL/BDR        00:00:38    10.12.12.1      Ethernet0/1
+hadz0024-CORE#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State DROTHER, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.3  (Backup Designated Router)
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:37    10.12.234.2     Ethernet0/2
+10.12.100.4     200   FULL/DR         00:00:39    10.12.234.4     Ethernet0/2
+hadz0024-DIST#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State BDR, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:38    10.12.234.2     Ethernet0/1
+10.12.100.3       1   FULL/BDR        00:00:31    10.12.234.3     Ethernet0/1
+hadz0024-ACCESS#$f interface Ethernet0/1 | include State|Priority|Designated 
+  Transmit Delay is 1 sec, State DR, Priority 200
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.3  (Backup Designated Router)
+
+
+!-- END C02 PRIORITY
+
+
+!-- ==========================================================
+!-- C02 DR-FAILED: ELECTION, DR FAILS
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.1       1   FULL/BDR        00:00:30    10.12.12.1      Ethernet0/1
+hadz0024-CORE#$0/2 | include not enabled|State|Priority|[Dd]esignated        
+%OSPF: OSPF not enabled on Ethernet0/2
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.4     200   FULL/DR         00:00:37    10.12.234.4     Ethernet0/2
+hadz0024-DIST#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State BDR, Priority 1
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:37    10.12.234.3     Ethernet0/1
+hadz0024-ACCESS#$f interface Ethernet0/1 | include State|Priority|Designated 
+  Transmit Delay is 1 sec, State DR, Priority 200
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+  Backup Designated router (ID) 10.12.100.3, Interface address 10.12.234.3
+    Adjacent with neighbor 10.12.100.3  (Backup Designated Router)
+
+
+!-- END C02 DR-FAILED
+
+
+!-- ==========================================================
+!-- C02 PRIORITY-ZERO: ELECTION, PRIORITY 0
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.4     200   FULL/DR         00:00:31    10.12.234.4     Ethernet0/2
+10.12.100.1       1   FULL/BDR        00:00:35    10.12.12.1      Ethernet0/1
+hadz0024-CORE#$f interface Ethernet0/2 | include State|Priority|Designated   
+  Transmit Delay is 1 sec, State DROTHER, Priority 0
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+    Adjacent with neighbor 10.12.100.4  (Designated Router)
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf neighbor
+hadz0024-DIST#$0/2 | include not enabled|State|Priority|[Dd]esignated        
+%OSPF: OSPF not enabled on Ethernet0/2
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       0   FULL/DROTHER    00:00:38    10.12.234.2     Ethernet0/1
+hadz0024-ACCESS#$f interface Ethernet0/1 | include State|Priority|Designated 
+  Transmit Delay is 1 sec, State DR, Priority 200
+  Designated Router (ID) 10.12.100.4, Interface address 10.12.234.4
+
+
+!-- END C02 PRIORITY-ZERO
+
+
+!-- ==========================================================
+!-- C02 P2P: POINT-TO-POINT RULE
+!-- ==========================================================
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       0   FULL/  -        00:00:33    10.12.13.3      Ethernet0/3
+10.12.100.2       0   FULL/  -        00:00:38    10.12.12.2      Ethernet0/2
+hadz0024-EDGE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.1/32     1     LOOP  0/0
+Et0/3        12    0               10.12.13.1/29      1     P2P   1/1
+Et0/2        12    0               10.12.12.1/29      1     P2P   1/1
+
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:34    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:39    10.12.234.4     Ethernet0/2
+10.12.100.1       0   FULL/  -        00:00:33    10.12.12.1      Ethernet0/1
+hadz0024-CORE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.2/32     1     LOOP  0/0
+Et0/2        12    0               10.12.234.2/29     1     DROTH 2/2
+Et0/1        12    0               10.12.12.2/29      1     P2P   1/1
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.1       0   FULL/  -        00:00:39    10.12.13.1      Ethernet0/1
+10.12.100.2       1   FULL/DROTHER    00:00:39    10.12.234.2     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:37    10.12.234.4     Ethernet0/2
+hadz0024-DIST#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.3/32     1     LOOP  0/0
+Lo30         12    0               10.12.30.1/32      1     LOOP  0/0
+Et0/1        12    0               10.12.13.3/29      1     P2P   1/1
+Et0/2        12    0               10.12.234.3/29     1     BDR   2/2
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.2       1   FULL/DROTHER    00:00:39    10.12.234.2     Ethernet0/1
+10.12.100.3       1   FULL/BDR        00:00:31    10.12.234.3     Ethernet0/1
+hadz0024-ACCESS#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.4/32     1     LOOP  0/0
+Et0/1        12    0               10.12.234.4/29     1     DR    2/2
+Et0/3        12    0               10.12.20.1/24      1     DR    0/0
+hadz0024-ACCESS#ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 2/2/4 ms
+
+
+!-- END C02 P2P
+

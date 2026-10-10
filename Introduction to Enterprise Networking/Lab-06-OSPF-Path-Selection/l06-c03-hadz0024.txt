@@ -1,0 +1,130 @@
+!-- LAB: l06   CHECKPOINT: C03   STUDENT:hadz0024            U:12
+!-- Paste the prompt, command, and unedited output under each router.
+
+!-- ==========================================================
+!-- C03 BEFORE: DEFAULT COSTS, REFERENCE 100 MBPS
+!-- ==========================================================
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip ospf | include Reference
+ Reference bandwidth unit is 100 mbps
+hadz0024-EDGE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.1/32     1     LOOP  0/0
+Et0/3        12    0               10.12.13.1/29      1     P2P   1/1
+Et0/2        12    0               10.12.12.1/29      1     P2P   1/1
+
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf | include Reference
+ Reference bandwidth unit is 100 mbps
+hadz0024-CORE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.2/32     1     LOOP  0/0
+Et0/2        12    0               10.12.234.2/29     1     DROTH 2/2
+Et0/1        12    0               10.12.12.2/29      1     P2P   1/1
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 2, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:07:39 ago
+  Routing Descriptor Blocks:
+  * 10.12.12.1, from 10.12.100.1, 00:07:39 ago, via Ethernet0/1
+      Route metric is 2, traffic share count is 1
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf | include Reference
+ Reference bandwidth unit is 100 mbps
+hadz0024-DIST#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.3/32     1     LOOP  0/0
+Lo30         12    0               10.12.30.1/32      1     LOOP  0/0
+Et0/1        12    0               10.12.13.3/29      1     P2P   1/1
+Et0/2        12    0               10.12.234.3/29     1     BDR   2/2
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf | include Reference
+ Reference bandwidth unit is 100 mbps
+hadz0024-ACCESS#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.4/32     1     LOOP  0/0
+Et0/1        12    0               10.12.234.4/29     1     DR    2/2
+Et0/3        12    0               10.12.20.1/24      1     DR    0/0
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 3, type intra area
+  Last update from 10.12.234.3 on Ethernet0/1, 00:07:59 ago
+  Routing Descriptor Blocks:
+    10.12.234.3, from 10.12.100.1, 00:07:59 ago, via Ethernet0/1
+      Route metric is 3, traffic share count is 1
+  * 10.12.234.2, from 10.12.100.1, 00:08:22 ago, via Ethernet0/1
+      Route metric is 3, traffic share count is 1
+
+
+!-- END C03 BEFORE
+
+
+!-- ==========================================================
+!-- C03 AFTER: REFERENCE BANDWIDTH 10000
+!-- ==========================================================
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip ospf | include Reference
+ Reference bandwidth unit is 10000 mbps
+hadz0024-EDGE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.1/32     1     LOOP  0/0
+Et0/3        12    0               10.12.13.1/29      10    P2P   1/1
+Et0/2        12    0               10.12.12.1/29      10    P2P   1/1
+
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf | include Reference
+ Reference bandwidth unit is 10000 mbps
+hadz0024-CORE#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.2/32     1     LOOP  0/0
+Et0/2        12    0               10.12.234.2/29     10    DROTH 2/2
+Et0/1        12    0               10.12.12.2/29      10    P2P   1/1
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 11, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:02:34 ago
+  Routing Descriptor Blocks:
+  * 10.12.12.1, from 10.12.100.1, 00:02:34 ago, via Ethernet0/1
+      Route metric is 11, traffic share count is 1
+
+
+!-- ----- DIST -----
+hadz0024-DIST#show ip ospf | include Reference
+ Reference bandwidth unit is 10000 mbps
+hadz0024-DIST#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.3/32     1     LOOP  0/0
+Lo30         12    0               10.12.30.1/32      1     LOOP  0/0
+Et0/1        12    0               10.12.13.3/29      10    P2P   1/1
+Et0/2        12    0               10.12.234.3/29     10    BDR   2/2
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip ospf | include Reference
+ Reference bandwidth unit is 10000 mbps
+hadz0024-ACCESS#show ip ospf interface brief
+Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
+Lo100        12    0               10.12.100.4/32     1     LOOP  0/0
+Et0/1        12    0               10.12.234.4/29     10    DR    2/2
+Et0/3        12    0               10.12.20.1/24      10    DR    0/0
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.3 on Ethernet0/1, 00:03:20 ago
+  Routing Descriptor Blocks:
+    10.12.234.3, from 10.12.100.1, 00:03:20 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+  * 10.12.234.2, from 10.12.100.1, 00:03:20 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+
+
+!-- END C03 AFTER
+

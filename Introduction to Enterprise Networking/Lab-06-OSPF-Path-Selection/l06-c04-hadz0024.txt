@@ -1,0 +1,197 @@
+!-- LAB: l06   CHECKPOINT: C04   STUDENT:hadz0024            U:12
+!-- Paste the prompt, command, and unedited output under each router.
+
+!-- ==========================================================
+!-- C04 ECMP: EQUAL-COST PATHS
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:39    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:34    10.12.234.4     Ethernet0/2
+10.12.100.1       0   FULL/  -        00:00:37    10.12.12.1      Ethernet0/1
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:01:23 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:01:23 ago, via Ethernet0/2
+      Route metric is 21, traffic share count is 1
+    10.12.12.1, from 10.12.100.1, 00:01:23 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-CORE#show ip CEF 10.12.100.1
+10.12.100.1/32
+  nexthop 10.12.12.1 Ethernet0/1
+  nexthop 10.12.234.3 Ethernet0/2
+
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip interface brief | include Ethernet0/2
+Ethernet0/2            10.12.12.1      YES manual up                    up 
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.3 on Ethernet0/1, 00:07:19 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:07:19 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-ACCESS#ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 6/6/7 ms
+
+
+!-- END C04 ECMP
+
+
+!-- ==========================================================
+!-- C04 LINK-DOWN: LINK FAILURE
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:30    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:37    10.12.234.4     Ethernet0/2
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.3 on Ethernet0/2, 00:05:58 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:05:58 ago, via Ethernet0/2
+      Route metric is 21, traffic share count is 1
+hadz0024-CORE#show ip cef 10.12.100.1
+10.12.100.1/32
+  nexthop 10.12.234.3 Ethernet0/2
+
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip interface brief | include Ethernet0/2
+Ethernet0/2            10.12.12.1      YES manual administratively down down
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.3 on Ethernet0/1, 00:11:40 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:11:40 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-ACCESS#ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 2/3/5 ms
+
+
+!-- END C04 LINK-DOWN
+
+
+!-- ==========================================================
+!-- C04 RESTORED: LINK RESTORED
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:34    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:31    10.12.234.4     Ethernet0/2
+10.12.100.1       0   FULL/  -        00:00:37    10.12.12.1      Ethernet0/1
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:00:56 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:08:26 ago, via Ethernet0/2
+      Route metric is 21, traffic share count is 1
+    10.12.12.1, from 10.12.100.1, 00:00:56 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-CORE#show ip cef 10.12.100.1
+10.12.100.1/32
+  nexthop 10.12.12.1 Ethernet0/1
+  nexthop 10.12.234.3 Ethernet0/2
+
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip interface brief | include Ethernet0/2
+Ethernet0/2            10.12.12.1      YES manual up                    up  
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.3 on Ethernet0/1, 00:14:51 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:14:51 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-ACCESS#ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 1/2/4 ms
+
+
+!-- END C04 RESTORED
+
+
+!-- ==========================================================
+!-- C04 FINAL: FINAL COST STATE
+!-- ==========================================================
+
+!-- ----- CORE -----
+hadz0024-CORE#show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+10.12.100.3       1   FULL/BDR        00:00:34    10.12.234.3     Ethernet0/2
+10.12.100.4       1   FULL/DR         00:00:37    10.12.234.4     Ethernet0/2
+10.12.100.1       0   FULL/  -        00:00:33    10.12.12.1      Ethernet0/1
+hadz0024-CORE#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 11, type intra area
+  Last update from 10.12.12.1 on Ethernet0/1, 00:00:56 ago
+  Routing Descriptor Blocks:
+  * 10.12.12.1, from 10.12.100.1, 00:00:56 ago, via Ethernet0/1
+      Route metric is 11, traffic share count is 1
+hadz0024-CORE#show ip cef 10.12.100.1
+10.12.100.1/32
+  nexthop 10.12.12.1 Ethernet0/1
+
+
+!-- ----- EDGE -----
+hadz0024-EDGE#show ip interface brief | include Ethernet0/2
+Ethernet0/2            10.12.12.1      YES manual up                    up      
+
+
+!-- ----- ACCESS -----
+hadz0024-ACCESS#show ip route 10.12.100.1 255.255.255.255
+Routing entry for 10.12.100.1/32
+  Known via "ospf 12", distance 110, metric 21, type intra area
+  Last update from 10.12.234.2 on Ethernet0/1, 00:01:36 ago
+  Routing Descriptor Blocks:
+  * 10.12.234.3, from 10.12.100.1, 00:17:05 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+    10.12.234.2, from 10.12.100.1, 00:01:36 ago, via Ethernet0/1
+      Route metric is 21, traffic share count is 1
+hadz0024-ACCESS#ping 192.0.2.69 source Ethernet0/3 repeat 3 timeout 1
+Type escape sequence to abort.
+Sending 3, 100-byte ICMP Echos to 192.0.2.69, timeout is 1 seconds:
+Packet sent with a source address of 10.12.20.1 
+!!!
+Success rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms
+
+
+!-- END C04 FINAL
+
