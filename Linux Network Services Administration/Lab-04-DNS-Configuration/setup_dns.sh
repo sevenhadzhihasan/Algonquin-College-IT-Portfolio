@@ -17,11 +17,11 @@ echo "🚀 DEPLOYING COMPLETELY INTEGRATED MASTER/SLAVE DNS CLUSTER"
 echo "=========================================================="
 
 # ----------------------------------------------------------------------
-# 🖥️ TARGET 1: MASTER SERVER SETUP (Server3_SRV)
+# 🖥️ TARGET 1: MASTER SERVER SETUP & RESOLVER FIX (Server3_SRV)
 # ----------------------------------------------------------------------
-echo "[*] Pushing Configs & Strict Firewall to Server3_SRV ($MASTER_IP)..."
+echo "[*] Pushing Configs, Custom ACLs & Fixed Resolver to Server3_SRV ($MASTER_IP)..."
 
-ssh -T cst8246@$MASTER_IP MN="$MN" MASTER_IP="$MASTER_IP" SLAVE_IP="$SLAVE_IP" FTP_IP="$FTP_IP" HOST_PREFIX="$HOST_PREFIX" CLIENT_PREFIX="$CLIENT_PREFIX" 'EOF'
+ssh -T cst8246@$MASTER_IP << EOF
     echo "[Master] Installing Packages..."
     sudo dnf install bind bind-utils -y
 
@@ -39,7 +39,7 @@ options {
     allow-recursion { 127.0.0.1; 172.16.30.0/24; 172.16.31.0/24; };
     recursion yes;
     
-    # POINT 1: Global forwarders engine to handle external www.google.ca tracking
+    # Global forwarders engine to handle external www.google.ca tracking
     forwarders { 8.8.8.8; 8.8.4.4; };
     dnssec-validation no; 
 };
@@ -63,7 +63,7 @@ zone "16.172.in-addr.arpa" IN {
 };
 INNER_EOF
 
-    echo "[Master] Creating Forward Zone File (with ns1, ns2, and ftp)..."
+    echo "[Master] Creating Forward Zone File..."
     sudo tee /var/named/fwd.example${MN}.lab > /dev/null << INNER_EOF
 \$TTL 86400
 @   IN  SOA ${HOST_PREFIX}.example${MN}.lab. dnsadm.example${MN}.lab. (
@@ -93,7 +93,6 @@ INNER_EOF
 @   IN  NS  ${HOST_PREFIX}.example${MN}.lab.
 @   IN  NS  ${CLIENT_PREFIX}.example${MN}.lab.
 
-; Standardized positional octets maps to match /16 zone criteria perfectly
 130.30  IN  PTR ${HOST_PREFIX}.example${MN}.lab.
 130.30  IN  PTR ns1.example${MN}.lab.
 130.31  IN  PTR ${CLIENT_PREFIX}.example${MN}.lab.
@@ -122,20 +121,30 @@ INNER_EOF
         sudo firewall-cmd --reload
     fi
 
+    echo "[Master] FIX: Locking out external Network DNS overrides..."
+    M_INT=\$(ls /etc/sysconfig/network-scripts/ifcfg-* | grep -v "ifcfg-lo" | head -n 1)
+    sudo grep -qq "^PEERDNS=" "\$M_INT" && sudo sed -i "s/^PEERDNS=.*/PEERDNS=no/" "\$M_INT" || sudo echo "PEERDNS=no" >> "\$M_INT"
+    sudo rm -f /etc/resolv.conf
+    sudo tee /etc/resolv.conf > /dev/null << 'RESOLV_EOF'
+search localdomain example130.lab
+nameserver 127.0.0.1
+RESOLV_EOF
+
     echo "[Master] Activating and Starting BIND Engine..."
     sudo systemctl daemon-reload
+    sudo systemctl restart NetworkManager
     sudo systemctl restart named
     sudo systemctl enable named
     echo "[✓] Server3_SRV Complete."
 EOF
 
 # ----------------------------------------------------------------------
-# 💻 TARGET 2: SLAVE CLIENT SETUP (Linux3_CLT)
+# 💻 TARGET 2: SLAVE CLIENT SETUP & RESOLVER FIX (Linux3_CLT)
 # ----------------------------------------------------------------------
 echo "----------------------------------------------------------"
-echo "[*] Pushing Configs & Strict Firewall to Linux3_CLT ($SLAVE_IP)..."
+echo "[*] Pushing Configs, Fixed Resolver & Firewall to Linux3_CLT ($SLAVE_IP)..."
 
-ssh -T cst8246@$SLAVE_IP MN="$MN" MASTER_IP="$MASTER_IP" SLAVE_IP="$SLAVE_IP" 'EOF'
+ssh -T cst8246@$SLAVE_IP << EOF
     echo "[Slave] Installing Packages..."
     sudo dnf install bind bind-utils -y
 
@@ -170,6 +179,7 @@ INNER_EOF
     sudo chown root:named /etc/named.conf
     sudo chmod 640 /etc/named.conf
     
+    sudo mkdir -p /var/named/slaves
     sudo chown -R named:named /var/named/slaves/
     sudo chmod 770 /var/named/slaves/
 
@@ -187,17 +197,27 @@ INNER_EOF
         sudo firewall-cmd --reload
     fi
 
+    echo "[Slave] FIX: Locking out external Network DNS overrides..."
+    S_INT=\$(ls /etc/sysconfig/network-scripts/ifcfg-* | grep -v "ifcfg-lo" | head -n 1)
+    sudo grep -qq "^PEERDNS=" "\$S_INT" && sudo sed -i "s/^PEERDNS=.*/PEERDNS=no/" "\$S_INT" || sudo echo "PEERDNS=no" >> "\$S_INT"
+    sudo rm -f /etc/resolv.conf
+    sudo tee /etc/resolv.conf > /dev/null << 'RESOLV_EOF'
+search localdomain example130.lab
+nameserver 127.0.0.1
+RESOLV_EOF
+
     echo "[Slave] Activating BIND..."
     sudo systemctl daemon-reload
+    sudo systemctl restart NetworkManager
     sudo systemctl restart named
     sudo systemctl enable named
     
-    echo "[Slave] Verifying automatic zone synchronization file data..."
+    echo "[Slave] Verifying automatic zone synchronization..."
     sleep 3
-    sudo ls -l /var/named/slaves/
+    ls -l /var/named/slaves/
     echo "[✓] Linux3_CLT Complete."
 EOF
 
 echo "=========================================================="
-echo "🎉 ALL EVALUATION CRITERIA MERGED & REMOTE PUSH FINISHED!"
+echo "🎉 SUCCESS: BOTH INFRASTRUCTURE NODES DEPLOYED AND FIXED!"
 echo "=========================================================="
