@@ -13,11 +13,11 @@ HOST_PREFIX="hadz0024-SRV"
 CLIENT_PREFIX="hadz0024-CLT"
 
 echo "=========================================================="
-echo "🚀 DEPLOYING COMPLETELY INTEGRATED MASTER/SLAVE DNS CLUSTER"
+echo "DEPLOYING COMPLETELY INTEGRATED MASTER/SLAVE DNS CLUSTER"
 echo "=========================================================="
 
 # ----------------------------------------------------------------------
-# 🖥️ TARGET 1: MASTER SERVER SETUP & RESOLVER FIX (Server3_SRV)
+# TARGET 1: MASTER SERVER SETUP & RESOLVER FIX (Server3_SRV)
 # ----------------------------------------------------------------------
 echo "[*] Pushing Configs, Custom ACLs & Fixed Resolver to Server3_SRV ($MASTER_IP)..."
 
@@ -139,7 +139,7 @@ RESOLV_EOF
 EOF
 
 # ----------------------------------------------------------------------
-# 💻 TARGET 2: SLAVE CLIENT SETUP & RESOLVER FIX (Linux3_CLT)
+# TARGET 2: SLAVE CLIENT SETUP & RESOLVER FIX (Linux3_CLT)
 # ----------------------------------------------------------------------
 echo "----------------------------------------------------------"
 echo "[*] Pushing Configs, Fixed Resolver & Firewall to Linux3_CLT ($SLAVE_IP)..."
@@ -219,5 +219,5 @@ RESOLV_EOF
 EOF
 
 echo "=========================================================="
-echo "🎉 SUCCESS: BOTH INFRASTRUCTURE NODES DEPLOYED AND FIXED!"
+echo "SUCCESS: BOTH INFRASTRUCTURE NODES DEPLOYED AND FIXED!"
 echo "=========================================================="
