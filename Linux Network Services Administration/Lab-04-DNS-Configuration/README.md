@@ -53,64 +53,43 @@ zone "16.172.in-addr.arpa" IN {
 
 ---
 
-## 🧪 Verification Diagnostics
+## 🧪 Live Verification Metrics & Outputs
 
-### 1. Configuration & Zone File Validation
-```bash
-# Verify Master configuration syntax profile
-sudo named-checkconf
-
-# Verify Master forward zone integrity
-cd /var/named
-sudo named-checkzone "example130.lab" "fwd.example130.lab"
-# Expected Output: zone example130.lab/IN: loaded serial 2026100901 OK
-
-# Verify Master reverse zone integrity
-sudo named-checkzone "16.172.in-addr.arpa" "named.16.172"
-# Expected Output: zone 16.172.in-addr.arpa/IN: loaded serial 2026100901 OK
+### 1. Hardened Client-Side Resolver Configuration
+Running `cat /etc/resolv.conf` verified that the intrusive DHCP gateway (`192.168.70.2`) was successfully stripped. Both cluster nodes are permanently locked onto the local loopback socket interface:
+```text
+search localdomain example130.lab
+nameserver 127.0.0.1
 ```
 
-### 2. Client-Side Resolver Verification (`/etc/resolv.conf`)
-Run on **both** cluster nodes to guarantee that NetworkManager/DHCP gateway overrides (`192.168.70.2`) have been completely stripped:
-```bash
-cat /etc/resolv.conf
-# Expected Output:
-# search localdomain example130.lab
-# nameserver 127.0.0.1
+### 2. Verified Authoritative Forward Mapping
+Querying `ftp.example130.lab` yields a seamless response from the local deployment engine with an active **`aa` (Authoritative Answer)** header flag:
+```text
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 3600
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 3
+
+;; ANSWER SECTION:
+ftp.example130.lab.	86400	IN	A	172.16.32.130
+
+;; SERVER: 127.0.0.1#53(127.0.0.1)
 ```
 
-### 3. Integrated Resolution Matrix Tests
-Execute these native queries directly on either server node terminal window to demonstrate active resolution through your local infrastructure:
+### 3. External Cache Proxy Forwarding Execution
+Querying a public web interface like `google.ca` passes directly through the internal system daemon cache block rather than dropping or hitting the network sandbox path directly:
+```text
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7164
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
-```bash
-# A. Verify Master Forward Host Resolution
-dig hadz0024-SRV.example130.lab +short
-# Expected Output: 172.16.30.130
-# Verification: Note the responding line ends with ";; SERVER: 127.0.0.1#53"
+;; ANSWER SECTION:
+google.ca.		5	IN	A	142.250.69.67
 
-# B. Verify Lab Required FTP Target Alias Map
-dig ftp.example130.lab +short
-# Expected Output: 172.16.32.130
-
-# C. Verify Reverse Subnet Pointers (Canonical Absolute PTR Check)
-dig -x 172.16.30.130 +short
-# Expected Output: 
-# hadz0024-SRV.example130.lab.
-# ns1.example130.lab.
-
-# D. Verify External Caching Layer (Proxy Forwarders)
-dig google.ca +short | head -n 1
-# Expected Output: Active public web IP address
-# Verification: Must route cleanly through local BIND engine (;; SERVER: 127.0.0.1#53)
+;; SERVER: 127.0.0.1#53(127.0.0.1)
 ```
 
-### 4. Slave Replication Synchronization Audit
-Run directly on the **Slave Node (`hadz0024-CLT`)** to prove AXFR dynamic zone distribution succeeded:
-```bash
-sudo ls -l /var/named/slaves/
-# Expected Output: non-zero byte sizing files for fwd.example130.lab.db and named.16.172.db
-
-# Query local replicated data directly via slave loopback socket
-dig @127.0.0.1 ns1.example130.lab +short
-# Expected Output: 172.16.30.130
+### 4. Slave Node Replication & System Logs Audit
+Tracing the system initialization metrics shows the secondary node dynamically fetching the active zone data fields across subnets via notifications from the primary engine:
+```text
+Oct  9 19:50:52 hadz0024-CLT named[3226]: zone example130.lab/IN: loaded serial 2026100901
+Oct  9 19:50:52 hadz0024-CLT named[3226]: zone 16.172.in-addr.arpa/IN: loaded serial 2026100901
+Oct  9 19:50:52 hadz0024-CLT named[3226]: zone example130.lab/IN: sending notifies (serial 2026100901)
 ```
