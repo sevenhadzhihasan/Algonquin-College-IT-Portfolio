@@ -59,5 +59,4 @@ The user mailbox for **Richard Hagemeyer** was provisioned inside the target **E
     ```powershell
     Set-Mailbox "RichardH" -ForwardingAddress "hadz0024@dm89069.cst8342.com" -DeliverToMailboxAndForward \$true
     ```
-
-  
+    
