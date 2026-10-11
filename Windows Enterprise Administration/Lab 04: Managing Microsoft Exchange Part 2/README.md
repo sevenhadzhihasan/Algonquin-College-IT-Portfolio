@@ -41,7 +41,7 @@ The user mailbox for **Richard Hagemeyer** was provisioned inside the target **E
 *   **Security Actions:** Explicitly disabled inbound client message collection access layers over **POP3** and **IMAP4** for this specific account, securing transport boundaries to modern web-based (OWA) and native MAPI connection parameters.
 
 #### **Temporal Retention Hold Deployment**
-*   **Action:** Bypassed layout limitations inside the ECP dashboard by executing an administrative prompt block inside the **Exchange Management Shell** to lock mailbox parameters under an explicit 1-week data preservation hold while the user is away on holiday:
+*   **Action:** Bypassed layout limitations inside the ECP dashboard by run an administrative prompt block inside the **Exchange Management Shell** to lock mailbox parameters under an explicit 1 week data preservation hold while the user is away on holiday:
     ```powershell
     Set-Mailbox "RichardH" -RetentionHoldEnabled $true -EndDate ((Get-Date).AddDays(7))
     ```
@@ -59,4 +59,5 @@ The user mailbox for **Richard Hagemeyer** was provisioned inside the target **E
     ```powershell
     Set-Mailbox "RichardH" -ForwardingAddress "hadz0024@dm89069.cst8342.com" -DeliverToMailboxAndForward \$true
     ```
+
     
