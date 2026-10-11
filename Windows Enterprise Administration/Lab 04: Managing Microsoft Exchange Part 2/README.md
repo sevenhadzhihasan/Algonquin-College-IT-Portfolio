@@ -30,12 +30,12 @@ A dedicated database was initialized to house organizational staff mailboxes wit
 The user mailbox for **Richard Hagemeyer** was provisioned inside the target **ExchUsers** Organizational Unit and configured with precise individual service level policy overrides.
 
 #### **Mailbox Architecture Matrix**
-*   **Account Settings:** First name `Richard`, Last Name `Hagemeyer`, Login Identity `RichardH`, Primary Email `rh@://cst8342.com`.
+*   **Account Settings:** First name `Richard`, Last Name `Hagemeyer`, Login Identity `RichardH`, Primary Email `rh@dm89069.cst8342.com`.
 *   **Database Target:** Hosted directly on the newly created **Staff** database.
 *   **On-Premises Archiving:** Active and explicitly targeted onto the **Staff** database volume.
 
 #### **Contact Tracking Metadata**
-*   **Profile Parameter:** Updated the account's structural **Street Address** attribute to feature active tracking footprint strings containing unique identification credentials: `[Student Number] [User ID]`.
+*   **Profile Parameter:** Updated the account's structural **Street Address** attribute to feature active tracking footprint strings containing unique identification credentials: `[hadz0024]`.
 
 #### **Client Protocol Access Control Lists**
 *   **Security Actions:** Explicitly disabled inbound client message collection access layers over **POP3** and **IMAP4** for this specific account, securing transport boundaries to modern web-based (OWA) and native MAPI connection parameters.
@@ -54,8 +54,9 @@ The user mailbox for **Richard Hagemeyer** was provisioned inside the target **E
     *   **Custom Archive Quota Limit:** 100 GB
 *   **Transport Size Restrictions:** Modified Maximum Sent and Maximum Received tracking values to a ceiling threshold of exactly **10 MB** (`10240` KB).
 
-#### **Mail Routing Redirection (Holiday Forwarding Loops)**
-*   **Action:** Enabled email flow redirection rules to manage vacation delivery routing profiles. Inbound communications are simultaneously routed to the user's primary mailbox and cloned to the host student tracking account mailbox with active verification flags confirming full automation metrics:
+#### **Mail Routing Redirection**
+*   **Action:** Enabled email flow redirection rules to manage delivery routing profiles. Inbound communications are simultaneously routed to the user's primary mailbox and cloned to the host student tracking account mailbox with active verification flags confirming full automation metrics:
     ```powershell
-    Set-Mailbox "RichardH" -ForwardingAddress "hadz0024@://cst8342.com" -DeliverToMailboxAndForward \$true
+    Set-Mailbox "RichardH" -ForwardingAddress "hadz0024@dm89069.cst8342.com" -DeliverToMailboxAndForward \$true
     ```
+    
