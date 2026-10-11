@@ -2,8 +2,8 @@
 
 ## 📊 Environment Configuration
 * **Server Hostname:** `SERVER89069`
-* **Fully Qualified Domain Name (FQDN):** `://cst8342.com`
-* **Active Directory Domain:** `://cst8342.com`
+* **Fully Qualified Domain Name (FQDN):** `dm89069.cst8342.com`
+* **Active Directory Domain:** `:dm89069.cst8342.com`
 * **Server IP Address:** `172.16.89.69`
 
 ---
@@ -13,8 +13,8 @@
 ### lab04-01 DNS Resolution Testing
 Verification of local Active Directory Domain Services (AD DS) and Exchange server resource records:
 ```cmd
-nslookup ://cst8342.com
-nslookup mail.://cst8342.com
+nslookup dm89069.cst8342.com
+nslookup mail.dm89069.cst8342.com
 ```
 
 ### lab04-02 Core Services Verification
@@ -55,7 +55,7 @@ Get-RemoteDomain
 
 ### lab04-10 User Mailbox Provisioning
 * **Path:** ECP > Recipients > Mailboxes > Add User Mailbox
-* **Target Profile Account:** Created and initialized student profile **`hadz0024`** (`hadz0024@://cst8342.com`).
+* **Target Profile Account:** Created and initialized student profile **`hadz0024`** (`hadz0024@dm89069.cst8342.com`).
 
 ### lab04-11 Mailbox Property Node Review
 * **Path:** ECP > Recipients > Mailboxes > Edit Properties > General tab
@@ -77,14 +77,14 @@ Get-RemoteDomain
 * **Status:** Custom storage paths populated, saved, and successfully mapped onto `SERVER89069` with the "Mount this database" flag verified.
 
 ### lab04-16 Advanced Directory Mailbox Provisioning
-* **Target Profile Account:** Doug Dacey (`daceyd@://cst8342.com`)
+* **Target Profile Account:** Doug Dacey (`daceyd@dm89069.cst8342.com`)
 * **Organizational Unit Target:** `ExchUsers` (Provisioned inside ADUC)
 * **Target Storage Node:** Assigned manually to your custom storage database node partition `dm89069_hadz0024` under More Options.
 
 ### lab04-17 Remote Boundary Test via Telnet
 Local port-probing check to ensure raw internal mail relay paths are active:
 ```cmd
-telnet mail.://cst8342.com 25
+telnet mail.dm89069.cst8342.com 25
 ```
 * **Expected Successful Transaction Greeting:** 
   `220 ://cst8342.com Microsoft ESMTP MAIL Service ready`
