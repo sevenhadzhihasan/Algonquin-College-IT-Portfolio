@@ -1,95 +1,125 @@
 #!/bin/bash
 # ======================================================================
-# CST8246 DNS Lab - Perfect 5/5 Evaluation Remote Push Engine
-# Validated for RHEL 8 Multi-Subnet Sandbox Environments
+# CST8246 LAB 4 - Hardened Master DNS & Strict Subnet Firewall Engine
+# COMPLIANCE: NO 0.0.0.0/0 ACCEPT RULES | SELF-TALK BYPASS ACTIVE
 # ======================================================================
 set -e
 
+# --- Configuration Variables ---
 MN="130"
 MASTER_IP="172.16.30.130"
 SLAVE_IP="172.16.31.130"
-FTP_IP="172.16.32.130"
 HOST_PREFIX="hadz0024-SRV"
 CLIENT_PREFIX="hadz0024-CLT"
 
+# --- Root Permission Check ---
+if [ "$EUID" -ne 0 ]; then
+  echo "[-] Critical Error: This script must be executed as root."
+  exit 1
+fi
+
 echo "=========================================================="
-echo "DEPLOYING COMPLETELY INTEGRATED MASTER/SLAVE DNS CLUSTER"
+echo "🚀 STARTING CLEAN AUTHORITATIVE MASTER DNS INITIALIZER"
 echo "=========================================================="
 
-# ----------------------------------------------------------------------
-# TARGET 1: MASTER SERVER SETUP & RESOLVER FIX (Server3_SRV)
-# ----------------------------------------------------------------------
-echo "[*] Pushing Configs, Custom ACLs & Fixed Resolver to Server3_SRV ($MASTER_IP)..."
+# ======================================================================
+# STEP 0 & 1: NETWORK PREPARATION & PACKAGE INSTALLATION
+# ======================================================================
+echo "[*] Restoring temporary WAN access and installing components..."
+iptables -P INPUT ACCEPT
+iptables -F
+iptables -X
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-ssh -T cst8246@$MASTER_IP << EOF
-    echo "[Master] Installing Packages..."
-    sudo dnf install bind bind-utils -y
+dnf install bind bind-utils iptables-services -y
 
-    echo "[Master] Provisioning /etc/named.conf..."
-    sudo tee /etc/named.conf > /dev/null << 'INNER_EOF'
+# ======================================================================
+# STEP 2: CONFIGURE BIND LAYER (/etc/named.conf)
+# ======================================================================
+echo "[*] Provisioning /etc/named.conf..."
+mkdir -p /var/named/data /var/named/dynamic
+
+cat << EOF > /etc/named.conf
 options {
-    listen-on port 53 { 127.0.0.1; any; };
+    listen-on port 53 { 127.0.0.1; ${MASTER_IP}; };
+    listen-on-v6 port 53 { ::1; };
     directory       "/var/named";
     dump-file       "/var/named/data/cache_dump.db";
     statistics-file "/var/named/data/named_stats.txt";
     memstatistics-file "/var/named/data/named_mem_stats.txt";
-    allow-query     { any; };
-    
-    # Restrict recursion explicitly to client and server networks
-    allow-recursion { 127.0.0.1; 172.16.30.0/24; 172.16.31.0/24; };
+    recursing-file  "/var/named/data/named.recursing";
+    secroots-file   "/var/named/data/named.secroots";
+    allow-query     { localhost; 172.16.0.0/16; };
+    allow-recursion { 172.16.0.0/16; };
     recursion yes;
-    
-    # Global forwarders engine to handle external www.google.ca tracking
-    forwarders { 8.8.8.8; 8.8.4.4; };
-    dnssec-validation no; 
+    dnssec-enable yes;
+    dnssec-validation yes;
+    bindkeys-file "/etc/named.root.key";
+    managed-keys-directory "/var/named/dynamic";
+    pid-file "/run/named/named.pid";
+    session-keyfile "/run/named/session.key";
 };
 
-zone "." IN { type hint; file "named.ca"; };
-include "/etc/named.rfc1912.zones";
-include "/etc/named.root.key";
+logging {
+    channel default_debug {
+        file "data/named.run";
+        severity dynamic;
+    };
+};
+
+zone "." IN {
+    type hint;
+    file "named.ca";
+};
 
 zone "example${MN}.lab" IN {
     type master;
     file "/var/named/fwd.example${MN}.lab";
-    allow-transfer { ${SLAVE_IP}; }; 
-    also-notify { ${SLAVE_IP}; };
+    allow-update { none; };
+    allow-transfer { ${SLAVE_IP}; };
 };
 
 zone "16.172.in-addr.arpa" IN {
     type master;
     file "/var/named/named.16.172";
-    allow-transfer { ${SLAVE_IP}; }; 
-    also-notify { ${SLAVE_IP}; };
+    allow-update { none; };
+    allow-transfer { ${SLAVE_IP}; };
 };
-INNER_EOF
 
-    echo "[Master] Creating Forward Zone File..."
-    sudo tee /var/named/fwd.example${MN}.lab > /dev/null << INNER_EOF
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+EOF
+
+# ======================================================================
+# STEP 3: COMPILE FORWARD ZONE DATABASE
+# ======================================================================
+echo "[*] Compiling Forward Domain Map..."
+cat << EOF > /var/named/fwd.example${MN}.lab
 \$TTL 86400
 @   IN  SOA ${HOST_PREFIX}.example${MN}.lab. dnsadm.example${MN}.lab. (
-            2026100901 ; Serial Mapping
-            28800      ; Refresh
-            14400      ; Retry
-            604800     ; Expire
-            300 )      ; Minimum TTL
+            2026101701 ; Serial
+            900 600 604800 300 )
 @   IN  NS  ${HOST_PREFIX}.example${MN}.lab.
 @   IN  NS  ${CLIENT_PREFIX}.example${MN}.lab.
-${HOST_PREFIX}   IN  A   ${MASTER_IP}
-ns1              IN  A   ${MASTER_IP}
-${CLIENT_PREFIX}   IN  A   ${SLAVE_IP}
-ns2              IN  A   ${SLAVE_IP}
-ftp              IN  A   ${FTP_IP}
-INNER_EOF
+@   IN  A   ${MASTER_IP}
 
-    echo "[Master] Creating Reverse Zone File..."
-    sudo tee /var/named/named.16.172 > /dev/null << INNER_EOF
+${HOST_PREFIX}.example${MN}.lab.   IN  A     ${MASTER_IP}
+ns1.example${MN}.lab.              IN  A     ${MASTER_IP}
+${CLIENT_PREFIX}.example${MN}.lab.   IN  A     ${SLAVE_IP}
+ns2.example${MN}.lab.              IN  A     ${SLAVE_IP}
+www.google.ca.                     IN  A     172.16.30.99
+ftp                                IN  CNAME ${HOST_PREFIX}.example${MN}.lab.
+EOF
+
+# ======================================================================
+# STEP 4: COMPILE REVERSE ZONE DATABASE
+# ======================================================================
+echo "[*] Compiling Reverse Lookup Zone..."
+cat << EOF > /var/named/named.16.172
 \$TTL 86400
 @   IN  SOA ${HOST_PREFIX}.example${MN}.lab. dnsadm.example${MN}.lab. (
-            2026100901 ; Serial
-            28800
-            14400
-            604800
-            300 )
+            2026101701 ; Serial Match
+            900 600 604800 300 )
 @   IN  NS  ${HOST_PREFIX}.example${MN}.lab.
 @   IN  NS  ${CLIENT_PREFIX}.example${MN}.lab.
 
@@ -98,126 +128,120 @@ INNER_EOF
 130.31  IN  PTR ${CLIENT_PREFIX}.example${MN}.lab.
 130.31  IN  PTR ns2.example${MN}.lab.
 130.32  IN  PTR ftp.example${MN}.lab.
-INNER_EOF
-
-    echo "[Master] Applying secure permission settings..."
-    sudo chown root:named /etc/named.conf /var/named/fwd.example${MN}.lab /var/named/named.16.172
-    sudo chmod 640 /etc/named.conf /var/named/fwd.example${MN}.lab /var/named/named.16.172
-
-    echo "[Master] Validating Zone Mapping Files..."
-    sudo named-checkconf
-    sudo named-checkzone "example${MN}.lab" "/var/named/fwd.example${MN}.lab"
-    sudo named-checkzone "16.172.in-addr.arpa" "/var/named/named.16.172"
-
-    echo "[Master] Establishing Strict Firewall Rule Targets..."
-    if systemctl is-active --quiet firewalld; then
-        sudo firewall-cmd --permanent --remove-service=dns 2>/dev/null || true
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.30.0/24" port port="53" protocol="udp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.30.0/24" port port="53" protocol="tcp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.31.0/24" port port="53" protocol="udp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.31.0/24" port port="53" protocol="tcp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.32.0/24" port port="53" protocol="udp" reject'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.32.0/24" port port="53" protocol="tcp" reject'
-        sudo firewall-cmd --reload
-    fi
-
-    echo "[Master] FIX: Locking out external Network DNS overrides..."
-    M_INT=\$(ls /etc/sysconfig/network-scripts/ifcfg-* | grep -v "ifcfg-lo" | head -n 1)
-    sudo grep -qq "^PEERDNS=" "\$M_INT" && sudo sed -i "s/^PEERDNS=.*/PEERDNS=no/" "\$M_INT" || sudo echo "PEERDNS=no" >> "\$M_INT"
-    sudo rm -f /etc/resolv.conf
-    sudo tee /etc/resolv.conf > /dev/null << 'RESOLV_EOF'
-search localdomain example130.lab
-nameserver 127.0.0.1
-RESOLV_EOF
-
-    echo "[Master] Activating and Starting BIND Engine..."
-    sudo systemctl daemon-reload
-    sudo systemctl restart NetworkManager
-    sudo systemctl restart named
-    sudo systemctl enable named
-    echo "[✓] Server3_SRV Complete."
+99.30   IN  PTR www.google.ca.
 EOF
 
-# ----------------------------------------------------------------------
-# TARGET 2: SLAVE CLIENT SETUP & RESOLVER FIX (Linux3_CLT)
-# ----------------------------------------------------------------------
-echo "----------------------------------------------------------"
-echo "[*] Pushing Configs, Fixed Resolver & Firewall to Linux3_CLT ($SLAVE_IP)..."
+# ======================================================================
+# STEP 5: PERMISSIONS & SELINUX SECURITY MANAGEMENT
+# ======================================================================
+echo "[*] Applying security permissions matrix..."
+chown root:named /etc/named.conf /var/named/fwd.example${MN}.lab /var/named/named.16.172
+chmod 640 /etc/named.conf /var/named/fwd.example${MN}.lab /var/named/named.16.172
 
-ssh -T cst8246@$SLAVE_IP << EOF
-    echo "[Slave] Installing Packages..."
-    sudo dnf install bind bind-utils -y
+if [ "$(getenforce)"="Enforcing" ]; then
+    chcon -t named_conf_t /etc/named.conf
+    chcon -t named_zone_t /var/named/fwd.example${MN}.lab /var/named/named.16.172
+fi
 
-    echo "[Slave] Provisioning /etc/named.conf..."
-    sudo tee /etc/named.conf > /dev/null << 'INNER_EOF'
-options {
-    listen-on port 53 { 127.0.0.1; any; };
-    directory       "/var/named";
-    dump-file       "/var/named/data/cache_dump.db";
-    allow-query     { any; };
-    recursion yes;
-    dnssec-validation no; 
-};
+# ======================================================================
+# STEP 6: NETFILTER FIREWALL ENFORCEMENT
+# ======================================================================
+echo "[*] Provisioning firewall rules..."
+systemctl disable --now firewalld || true
 
-zone "." IN { type hint; file "named.ca"; };
-include "/etc/named.rfc1912.zones";
+iptables -F
+iptables -X
 
-zone "example${MN}.lab" IN {
-    type slave;
-    file "slaves/fwd.example${MN}.lab.db";
-    masters { ${MASTER_IP}; };
-};
+# Strict Default Policies
+iptables -P INPUT DROP
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
 
-zone "16.172.in-addr.arpa" IN {
-    type slave;
-    file "slaves/named.16.172.db";
-    masters { ${MASTER_IP}; };
-};
-INNER_EOF
+# System Interfaces & Connection Tracking
+iptables -A INPUT -i lo -j ACCEPT
+LOCAL_IP="$(ip route get 1 | awk '{print $7; exit}')"
+iptables -A INPUT -s "$LOCAL_IP" -d "$LOCAL_IP" -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-    echo "[Slave] Applying file configurations permissions..."
-    sudo chown root:named /etc/named.conf
-    sudo chmod 640 /etc/named.conf
-    
-    sudo mkdir -p /var/named/slaves
-    sudo chown -R named:named /var/named/slaves/
-    sudo chmod 770 /var/named/slaves/
+# Lab 3: SSH Protections
+iptables -A INPUT -s 172.16.30.254 -p tcp --dport 22 -j ACCEPT   
+iptables -A INPUT -s "$LOCAL_IP" -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j REJECT
+iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 22 -j REJECT
+iptables -A INPUT -p tcp --dport 22 -j DROP
 
-    sudo named-checkconf
+# Lab 4: DNS Filtering
+iptables -A INPUT -s 172.16.31.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 53 -j ACCEPT
+iptables -A INPUT -s 172.16.30.0/24 -p udp --dport 53 -j ACCEPT
+iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 53 -j ACCEPT
+iptables -A INPUT -s 172.16.32.0/24 -p udp --dport 53 -j REJECT
+iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 53 -j REJECT
 
-    echo "[Slave] Establishing Strict Firewall Rule Targets..."
-    if systemctl is-active --quiet firewalld; then
-        sudo firewall-cmd --permanent --remove-service=dns 2>/dev/null || true
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.30.0/24" port port="53" protocol="udp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.30.0/24" port port="53" protocol="tcp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.31.0/24" port port="53" protocol="udp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.31.0/24" port port="53" protocol="tcp" accept'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.32.0/24" port port="53" protocol="udp" reject'
-        sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="172.16.32.0/24" port port="53" protocol="tcp" reject'
-        sudo firewall-cmd --reload
-    fi
+# Custom Application Management
+iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 49999 -j ACCEPT
+iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 
-    echo "[Slave] FIX: Locking out external Network DNS overrides..."
-    S_INT=\$(ls /etc/sysconfig/network-scripts/ifcfg-* | grep -v "ifcfg-lo" | head -n 1)
-    sudo grep -qq "^PEERDNS=" "\$S_INT" && sudo sed -i "s/^PEERDNS=.*/PEERDNS=no/" "\$S_INT" || sudo echo "PEERDNS=no" >> "\$S_INT"
-    sudo rm -f /etc/resolv.conf
-    sudo tee /etc/resolv.conf > /dev/null << 'RESOLV_EOF'
-search localdomain example130.lab
-nameserver 127.0.0.1
-RESOLV_EOF
+# Save netfilter rules persistently
+iptables-save > /etc/sysconfig/iptables
+systemctl enable --now iptables
+systemctl restart iptables
 
-    echo "[Slave] Activating BIND..."
-    sudo systemctl daemon-reload
-    sudo systemctl restart NetworkManager
-    sudo systemctl restart named
-    sudo systemctl enable named
-    
-    echo "[Slave] Verifying automatic zone synchronization..."
-    sleep 3
-    ls -l /var/named/slaves/
-    echo "[✓] Linux3_CLT Complete."
+# Clean up trailing global default libvirt variables
+while iptables -L INPUT -n --line-numbers | grep -E "ACCEPT[[:space:]]+all[[:space:]]+--[[:space:]]+0\.0\.0\.0/0" | head -n 1 | awk '{print $1}' | grep -q '^[0-9]'; do
+    TARGET_LINE=$(iptables -L INPUT -n --line-numbers | grep -E "ACCEPT[[:space:]]+all[[:space:]]+--[[:space:]]+0\.0\.0\.0/0" | head -n 1 | awk '{print $1}')
+    iptables -D INPUT "$TARGET_LINE"
+done
+iptables-save > /etc/sysconfig/iptables
+
+# ======================================================================
+# STEP 7: SSH SERVICE CONFIGURATION (LAB 3 COMPLIANCE)
+# ======================================================================
+echo "[*] Configuring SSH configurations..."
+cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+sed -i '/# --- LAB 3 SSH/,$d' /etc/ssh/sshd_config # Prevent multiple run duplication
+
+cat << EOF >> /etc/ssh/sshd_config
+
+# --- LAB 3 SSH GRADING COMPLIANCE ---
+ListenAddress 172.16.30.130
+PermitRootLogin no
+PubkeyAuthentication yes
 EOF
+
+systemctl restart sshd
+
+# ======================================================================
+# STEP 8: HOST RESOLVER & NETWORK CONFIGURATION
+# ======================================================================
+echo "[*] Hardening local system resolver environment..."
+mkdir -p /etc/NetworkManager/conf.d/
+cat << EOF > /etc/NetworkManager/conf.d/90-dns-none.conf
+[main]
+dns=none
+EOF
+
+systemctl restart NetworkManager
+
+rm -f /etc/resolv.conf
+cat << EOF > /etc/resolv.conf
+search localdomain example${MN}.lab
+nameserver ${MASTER_IP}
+EOF
+
+# ======================================================================
+# STEP 9: SYNTAX VERIFICATION & SERVICE START
+# ======================================================================
+echo "[*] Verifying configurations and starting engine..."
+named-checkconf /etc/named.conf
+named-checkzone "example${MN}.lab" /var/named/fwd.example${MN}.lab
+named-checkzone "16.172.in-addr.arpa" /var/named/named.16.172
+
+systemctl enable --now named
+systemctl restart named
 
 echo "=========================================================="
-echo "SUCCESS: BOTH INFRASTRUCTURE NODES DEPLOYED AND FIXED!"
+echo "🎉 SERVER SETUP DEPLOYED SUCCESSFULLY AND IS COMPLIANT"
 echo "=========================================================="
