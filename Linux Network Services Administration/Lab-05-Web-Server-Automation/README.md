@@ -84,5 +84,5 @@ sudo ./verification.sh
 For tracking or troubleshooting system errors during evaluation, the infrastructure outputs logging properties to these targets:
 * **Apache Global Configuration Check:** `apachectl -t` or `apachectl configtest`
 * **Apache Real-Time Error Stream:** `tail -f /var/www/vhosts/www.example130.lab/log/error.log`
-* **BIND Daemon Logs:** `tail -f /var/named/data/named.run`
+* **BIND Logs:** `tail -f /var/named/data/named.run`
 * **Firewall Rule Tables Inspection:** `iptables -L INPUT -v -n --line-numbers`
