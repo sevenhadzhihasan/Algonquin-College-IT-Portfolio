@@ -73,7 +73,7 @@ chmod +x dns_master_replication_final.sh dns_slave_and_client_setup_final.sh ver
 ### Step 3: Execute Master Server Automation
 Run the primary automated blueprint on the server node (`172.16.30.130`):
 ```bash
-sudo .setup_master.sh
+sudo .setup_server.sh
 ```
 
 ### Step 4: Provision Slave and Client Node
