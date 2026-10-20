@@ -36,14 +36,14 @@ The entire infrastructure is built using structured, production-ready Bash scrip
 
 The directory contains three core automated production scripts:
 
-### 1. Server Provisioning Suite (`dns_master_replication_final.sh`)
+### 1. Server Provisioning Suite (`setup_master.sh`)
 Executes the full structural build of the Primary Master Platform:
 * **Package Synchronization:** Installs package binaries securely (`httpd`, `mod_ssl`, `bind`, `iptables`).
 * **Persistent Interface Aliasing:** Configures the `172.16.32.130` virtual network identity persistently across system reboots via NetworkManager.
 * **Database Authoring:** Writes BIND master forward zone files under proper security boundaries (`root:named`).
 * **VHost Compilation:** Generates localized Virtual Host templates and applies absolute directory permissions.
 
-### 2. Slave DNS Replication Setup (`dns_slave_and_client_setup_final.sh`)
+### 2. Slave DNS Replication Setup (`serup_slave.sh`)
 Provisioned on the backup node to establish client-side redundancy:
 * **Dynamic Directory Isolation:** Spines up the secure `/var/named/slaves/` container with specialized `770` permissions and SELinux context rules (`restorecon`).
 * **Zone Synchronization:** Configures modern replication listeners to pull real-time zone transfers from the Master.
@@ -73,13 +73,13 @@ chmod +x dns_master_replication_final.sh dns_slave_and_client_setup_final.sh ver
 ### Step 3: Execute Master Server Automation
 Run the primary automated blueprint on the server node (`172.16.30.130`):
 ```bash
-sudo .setup_server.sh
+sudo .setup_master.sh
 ```
 
 ### Step 4: Provision Slave and Client Node
 Run the secondary environment engine on the separate slave client node (`172.16.31.130`):
 ```bash
-sudo ./setup_client
+sudo ./setup_slave
 ```
 
 ### Step 5: Run Automated Client Validation
