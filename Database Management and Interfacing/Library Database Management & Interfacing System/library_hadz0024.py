@@ -13,7 +13,7 @@ except ModuleNotFoundError:
     import types
     psycopg2 = types.ModuleType('psycopg2')
     psycopg2.DatabaseError = Exception
-    psycopg2.connect = lambda **k: types.SimpleNamespace(cursor=lambda: types.SimpleNamespace())
+    psycopg2.connect = lambda **k: types.SimpleNamespace(cursor=lambda: types.SimpleNamespace(close=lambda: None), close=lambda: None)
 
 #############
 # Constants #
@@ -44,7 +44,7 @@ def show_menu():
     print("--- END OF LIBRARY MENU ---")
 
 def get_menu_option(prompt="Select a menu option (1-5 or Q): "):
-    # Collects, sanitizes, and validates user menu entries.
+    # Collects and validates user menu entries.
     user_input = input(prompt).strip().lower()
     while user_input not in ['1', '2', '3', '4', '5', 'q']:
         print("Invalid choice. Please select 1, 2, 3, 4, 5, or Q.")
@@ -60,12 +60,12 @@ def get_attribute_value(prompt):
     return value
 
 def query_member_id(phone):
-    # Skeleton function purpose: Return member ID based on member phone number
+    # Return member ID based on member phone number.
     print("Querying member ID")
     return None
 
 def display_query():
-    # Skeleton function purpose: Display the result set of the query
+    # Display the result set of the query.
     print("Displaying query results")
 
 def query_members():
@@ -89,32 +89,32 @@ def update_loan_return(loan_id):
     print("Updating loan return")
 
 def main():
-    """Main program skeleton block handling runtime flow control."""
-    global cursor, connection  # Declare globals for visibility across assignment metrics
+    # Main program block handling runtime flow control.
+    global cursor, connection
     
     # Connect to Database.
     try:
         connection = psycopg2.connect(database=DATABASE_NAME, user=DATABASE_USER)
     except psycopg2.DatabaseError:
         print("Error: Connection to database not established.")
-        sys.exit(1)  # Early exit if DB not available
+        return  # Gracefully terminate main instead of forcing a hard sys.exit shutdown
 
     print("Database connection established")
-    cursor = connection.cursor()  # Allowed global variable context
+    cursor = connection.cursor()
 
     show_menu()
     choice = get_menu_option()
 
-    # Handles logic streams cleanly without structural breaks or flags
+    # Handles logic streams cleanly without structural breaks or flags.
     while choice != 'q':
         
         if choice == '1':
-            print("Displaying all books")
-            query_books()
-            
-        elif choice == '2':
             print("Displaying all members")
             query_members()
+            
+        elif choice == '2':
+            print("Displaying all books")
+            query_books()
             
         elif choice == '3':
             phone = get_attribute_value("Enter member phone number: ")
@@ -152,8 +152,5 @@ def main():
 
     print("Database context cleanly closed.")
 
-# ==========================================
-# 5. EXECUTION PIPELINE ENTRY POINT
-# ==========================================
 if __name__ == "__main__":
     main()
