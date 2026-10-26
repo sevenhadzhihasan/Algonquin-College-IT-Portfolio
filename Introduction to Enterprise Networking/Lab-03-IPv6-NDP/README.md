@@ -8,7 +8,7 @@ Observe and document how IPv6 hosts dynamically discover their local network inf
 ---
 
 ## 🛠️ Deployment Method
-* **Primary Assessment:** To be executed on live physical hardware (Cisco ISR4331 EDGE Router and Alpine Linux VM) inside the Algonquin College in-person networking laboratory.
+* **Primary Assessment:** To be processed on live physical hardware (Cisco ISR4331 EDGE Router and Alpine Linux VM) inside the Algonquin College in-person networking laboratory.
 * **Pre-Lab Simulation:** Designed and verified using Cisco Packet Tracer to validate routing tables, SLAAC address scopes, and upstream static path navigation prior to physical deployment.
 
 ---
