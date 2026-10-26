@@ -1,7 +1,6 @@
 #!/bin/bash
 # ======================================================================
 # CST8246 LAB 4 - Hardened Master DNS & Strict Subnet Firewall Engine
-# COMPLIANCE: NO 0.0.0.0/0 ACCEPT RULES | SELF-TALK BYPASS ACTIVE
 # ======================================================================
 set -e
 
@@ -18,12 +17,8 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-echo "=========================================================="
-echo "🚀 STARTING CLEAN AUTHORITATIVE MASTER DNS INITIALIZER"
-echo "=========================================================="
-
 # ======================================================================
-# STEP 0 & 1: NETWORK PREPARATION & PACKAGE INSTALLATION
+# NETWORK PREPARATION & PACKAGE INSTALLATION
 # ======================================================================
 echo "[*] Restoring temporary WAN access and installing components..."
 iptables -P INPUT ACCEPT
@@ -34,7 +29,7 @@ echo "nameserver 8.8.8.8" > /etc/resolv.conf
 dnf install bind bind-utils iptables-services -y
 
 # ======================================================================
-# STEP 2: CONFIGURE BIND LAYER (/etc/named.conf)
+# CONFIGURE BIND LAYER (/etc/named.conf)
 # ======================================================================
 echo "[*] Provisioning /etc/named.conf..."
 mkdir -p /var/named/data /var/named/dynamic
@@ -91,7 +86,7 @@ include "/etc/named.root.key";
 EOF
 
 # ======================================================================
-# STEP 3: COMPILE FORWARD ZONE DATABASE
+# COMPILE FORWARD ZONE DATABASE
 # ======================================================================
 echo "[*] Compiling Forward Domain Map..."
 cat << EOF > /var/named/fwd.example${MN}.lab
@@ -112,7 +107,7 @@ ftp                                IN  CNAME ${HOST_PREFIX}.example${MN}.lab.
 EOF
 
 # ======================================================================
-# STEP 4: COMPILE REVERSE ZONE DATABASE
+# COMPILE REVERSE ZONE DATABASE
 # ======================================================================
 echo "[*] Compiling Reverse Lookup Zone..."
 cat << EOF > /var/named/named.16.172
@@ -132,7 +127,7 @@ cat << EOF > /var/named/named.16.172
 EOF
 
 # ======================================================================
-# STEP 5: PERMISSIONS & SELINUX SECURITY MANAGEMENT
+# PERMISSIONS & SELINUX SECURITY MANAGEMENT
 # ======================================================================
 echo "[*] Applying security permissions matrix..."
 chown root:named /etc/named.conf /var/named/fwd.example${MN}.lab /var/named/named.16.172
@@ -144,7 +139,7 @@ if [ "$(getenforce)"="Enforcing" ]; then
 fi
 
 # ======================================================================
-# STEP 6: NETFILTER FIREWALL ENFORCEMENT
+# NETFILTER FIREWALL ENFORCEMENT
 # ======================================================================
 echo "[*] Provisioning firewall rules..."
 systemctl disable --now firewalld || true
@@ -196,7 +191,7 @@ done
 iptables-save > /etc/sysconfig/iptables
 
 # ======================================================================
-# STEP 7: SSH SERVICE CONFIGURATION (LAB 3 COMPLIANCE)
+# SSH SERVICE CONFIGURATION (LAB 3 COMPLIANCE)
 # ======================================================================
 echo "[*] Configuring SSH configurations..."
 cp -n /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
@@ -214,7 +209,7 @@ EOF
 systemctl restart sshd
 
 # ======================================================================
-# STEP 8: HOST RESOLVER & NETWORK CONFIGURATION
+# HOST RESOLVER & NETWORK CONFIGURATION
 # ======================================================================
 echo "[*] Hardening local system resolver environment..."
 mkdir -p /etc/NetworkManager/conf.d/
@@ -232,7 +227,7 @@ nameserver ${MASTER_IP}
 EOF
 
 # ======================================================================
-# STEP 9: SYNTAX VERIFICATION & SERVICE START
+# SYNTAX VERIFICATION & SERVICE START
 # ======================================================================
 echo "[*] Verifying configurations and starting engine..."
 named-checkconf /etc/named.conf
