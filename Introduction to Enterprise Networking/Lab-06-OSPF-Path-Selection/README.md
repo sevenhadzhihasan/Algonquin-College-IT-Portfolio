@@ -3,7 +3,7 @@
 ![Lab 06 OSPF Network Topology Map](l06-topology.png)
 
 ## 📌 Project Overview
-This repository contains the engineering evidence logs and automated collection topologies for **Lab 06 (OSPF Dynamic Routing Protocols)**. 
+This repository contains the logs and automated collection topologies for **Lab 06 (OSPF Dynamic Routing Protocols)**. 
 The core objective of this deployment was to isolate link cost parameters, evaluate multi-access non-preemptive election mechanics, enforce edge default route propagation, and configure Equal-Cost Multi-Path (ECMP) convergence across multi-layered transit backbones.
 
 All configurations were engineered utilizing student magic number constraint **`U = 12`** under the account profile **`hadz0024`**.
@@ -19,19 +19,25 @@ The infrastructure layer is split into 4 core routers managing localized link-st
 
 ---
 
-## 📋 Lab Cost Metrics & Calculation Parameters
+## 📋 Lab Cost & Calculation Parameters
 
 ### 1. Default Baseline State (Reference Bandwidth = 100 Mbps)
 By default, OSPF sets its scaling calculation reference target to 100 Mbps. Because all infrastructure adapters operate on 1 Gbps physical fiber connections, the metric math drops below 1 and rounds up to a generic cost floor:
 
-\[\text{Cost} = \frac{100 \text{ Mbps}}{1,000 \text{ Mbps}} = 0.1 \rightarrow \textbf{1 (Generic Floor)}\]
+$$
+\text{Cost} = \frac{100 \text{ Mbps}}{1,000 \text{ Mbps}} = 0.1 \rightarrow \text{1 (Generic Floor)}
+$$
 
-*   **CORE Routing Matrix Result:** Path cost selection chooses the shortest physical line to reach the loopback targets with a cumulative metric of **`2`**.
+*   **CORE Routing Result:** Path cost selection chooses the shortest physical line to reach the loopback targets with a cumulative metric of **`2`**.
 
 ### 2. Scaled Standardized State (Reference Bandwidth = 10,000 Mbps)
 To allow OSPF to differentiate path performance accurately across higher-speed multi-gigabit connections, the dynamic metric ceiling was adjusted to 10,000 Mbps:
 
-\[\text{Cost} = \frac{10,000 \text{ Mbps}}{1,000 \text{ Mbps}} = \textbf{10 (Precision Metric)}\]
+$$
+\text{Cost} = \frac{10,000 \text{ Mbps}}{1,000 \text{ Mbps}} = \text{10 (Precision Metric)}
+$$
+
+*   **CORE Routing Matrix Result:** Transit link values scale directly to a cost of **`10`**, adjusting the primary optimized loopback pathway metric total to **`11`** (Transit Cost 10 + Loopback Cost 1).
 
 *   **CORE Routing Matrix Result:** Transit link values scale directly to a cost of **`10`**, adjusting the primary optimized loopback pathway metric total to **`11`** (Transit Cost 10 + Loopback Cost 1).
 
