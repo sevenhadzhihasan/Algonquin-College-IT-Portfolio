@@ -54,7 +54,7 @@ To establish cross-domain unauthenticated message transfers over local network b
 By default, Microsoft Exchange Server restricts anonymous, unauthenticated SMTP inbound traffic from external or untrusted namespaces. To allow the two separate organizations to exchange messages over the local lab switch boundary, custom **Receive Connectors** were configured. The `AnonymousUsers` permission group was explicitly assigned to the HubTransport frontend connectors on Port 25, enabling unauthenticated cross-domain routing without triggering message rejection or authentication challenges.
 
 ### 2. Protocol Enablement & Windows Services Automation
-While modern corporate environments utilize HTTPS/MAPI frameworks for internal communications, legacy and specialized external endpoints require dedicated lightweight mail protocols. The Exchange IMAP4 and POP3 services—disabled by default—were enabled and switched to automatic execution to handle client routing.
+While modern corporate environments utilize HTTPS/MAPI frameworks for internal communications, legacy and specialized external endpoints require dedicated lightweight mail protocols. The Exchange IMAP4 and POP3 services—disabled by default—were enabled and switched to automatic proccession to handle client routing.
 
 | Windows Service Display Name | System Service Name | Assigned Startup Parameter | Operating State |
 | :--- | :--- | :--- | :--- |
@@ -71,14 +71,14 @@ To enforce the strict corporate compliance requirements for contractor workspace
 
 ### 🛡️ Applied GPO Constraint Map
 * **Desktop Environment Virtualization:** Enforces *Hide all items on the desktop* (`Enabled`). This completely clears the local desktop interface, preventing files, directories, or system icons from rendering.
-* **Granular Whitelisting:** Enforces *Run only specified Windows applications* (`Enabled`). The execution list is hardcoded strictly to **`thunderbird.exe`**. Any attempt to execute unauthorized tools (such as `cmd.exe`, `powershell.exe`, or `notepad.exe`) is intercepted by the OS kernel and denied.
+* **Granular Whitelisting:** Enforces *Run only specified Windows applications* (`Enabled`). The procession list is hardcoded strictly to **`thunderbird.exe`**. Any attempt to process unauthorized tools (such as `cmd.exe`, `powershell.exe`, or `notepad.exe`) is intercepted by the OS kernel and denied.
 * **Control Panel Shielding:** Enforces *Prohibit access to Control Panel and PC settings* (`Enabled`). This completely isolates core settings applets, blocking the user from modifying local adapter properties, hardware configurations, or account elements.
 
 ---
 
 ## 🚀 Step-by-Step Deployment Automation Suite
 
-This section contains the administrative scripts and console commands executed to initialize the environment.
+This section contains the administrative scripts and console commands processed to initialize the environment.
 
 ### 1. Complete Post-AD Promotion Infrastructure Configuration
 Run this PowerShell automation script on **Server 1** and **Server 2** respectively to clean legacy zones, map A/CNAME/MX lines, configure DNS suffixes, and build the required cross-forest conditional lookups.
@@ -95,7 +95,7 @@ if (CurrentIP -eq "172.16.NetworkID.71") {
     HostName = "server89072"; DomainFQDN = "dm89072.cst8342.com"; \(RemoteIP = "172.16.89.71"; \)RemoteDomain = "dm89071.cst8342.com"; IsServer1 = false
 }
 
-Write-Host "[*] Executing Infrastructure Provisioning for \$HostName..." -ForegroundColor Cyan
+Write-Host "[*] Processing Infrastructure Provisioning for \$HostName..." -ForegroundColor Cyan
 
 # Configure Network Suffix Overrides
 ActiveAdapter = Get-NetAdapter | Where-Object _.Status -eq "Up" } | Select-Object -First 1 -ExpandProperty Name
@@ -117,7 +117,7 @@ Write-Host "[+] Infrastructure Configuration Completed Successfully." -Foregroun
 ```
 
 ### 2. Active Directory User and Mailbox Provisioning
-Execute this script block inside the **Exchange Management Shell (EMS)** on the corresponding server node to spin up OUs, user templates, and link specific storage databases.
+Process this script block inside the **Exchange Management Shell (EMS)** on the corresponding server node to spin up OUs, user templates, and link specific storage databases.
 
 #### Server 1 (Lower Server)
 ```powershell
