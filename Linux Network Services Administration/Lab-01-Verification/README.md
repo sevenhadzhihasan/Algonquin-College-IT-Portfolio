@@ -13,7 +13,7 @@ The purpose of this lab was to establish a functional, secure, dual-homed networ
 * **Secondary Interface (`ens224`):** Mapped to **VMnet0 (Bridged mode)** to link to a segregated, isolated local network (**Red Network**).
 
 ### 2. Operating System & Security Hardening
-* **Enterprise Linux OS Platform:** Provisioned and managed **Red Hat Enterprise Linux 8.10 ** kernel architectures.
+* **Enterprise Linux OS Platform:** Provisioned and managed **Red Hat Enterprise Linux 8.10** kernel architectures.
 * **User Management:** Created a dedicated administrative user account (`cst8246`) and verified its root access configuration under `uid=1000(cst8246) groups=1000(cst8246),10(wheel)`.
 * **Firewall Deactivation:** Stopped and disabled `firewalld` (`active: inactive (dead)`) to ensure unhindered service-to-service communication testing during the lab framework.
 * **SELinux Enforcement:** Verified system operational policies while maintaining active SELinux runtime layers.
