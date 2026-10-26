@@ -26,7 +26,7 @@ The platform was architected across three distinct software lifecycle engineerin
 
 ---
 
-## 💾 Relational Database Schema Blueprint
+## 💾 Relational Database Schema
 The physical layout layer handles relationship metrics across seven primary tables inside PostgreSQL:
 
 *   `publisher` — Tracks publishing house indexes and direct contacts.
