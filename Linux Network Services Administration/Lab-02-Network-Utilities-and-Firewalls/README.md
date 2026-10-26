@@ -1,6 +1,6 @@
 # Lab 02 - Network Utilities and Netfilter Firewall Configuration
 
-This directory contains the production shell script and evaluation diagnostics mapping out system access control matrix routines. The objective of this lab is to utilize netfilter firewall management (`iptables`), raw frame monitoring engines (`tcpdump`), and raw socket streaming tools (`netcat`) to map out subnet boundaries.
+This directory contains the shell script and evaluation diagnostics mapping out system access control routines. The objective of this lab is to utilize netfilter firewall management (`iptables`), raw frame monitoring engines (`tcpdump`), and raw socket streaming tools (`netcat`) to map out subnet boundaries.
 
 ## 🚀 Key Implemented Milestones
 
