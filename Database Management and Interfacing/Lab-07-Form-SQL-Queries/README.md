@@ -14,7 +14,7 @@ The database contains the following relational structure:
 
 ## 💻 Query Implementations & Solution Syntax
 
-### 1. Two-Table Relational Join with Sorting (Query #9)
+### 1. Two-Table Relational Join with Sorting
 **Objective:** Display the descriptive book titles and absolute physical acquisition dates of all indexed individual physical book copies, sorted systematically by book title.
 
 ```sql
@@ -24,7 +24,7 @@ JOIN book_copy ON book.isbn = book_copy.isbn
 ORDER BY title;
 ```
 
-### 2. Complex Four-Table Intersecting Join (Query #14)
+### 2. Complex Four-Table Intersecting Join
 **Objective:** Track global account historical logs by extracting complete transaction records containing member last names, book titles, loan initiation dates, and return confirmations for all recorded library rentals. Result sets are ordered alphabetically by the patron's last name.
 
 ```sql
@@ -38,7 +38,7 @@ ORDER BY last_name ASC;
 
 ---
 
-## 📊 Query Execution Outputs
+## 📊 Query Processing Outputs
 
 ### Output Results for Multi-Table Transaction Log (Query #14)
 Running the four-way relational table join query inside the terminal environment prints the following data matrix output:
