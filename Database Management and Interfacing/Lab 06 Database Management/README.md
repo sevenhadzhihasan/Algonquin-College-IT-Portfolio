@@ -1,7 +1,7 @@
 # Lab 06: Manage Data in a Database
 
 ## Project Overview
-This lab focuses on data management within a relational database tracking a library loan system utilizing PostgreSQL (`psql`). The primary objective is executing full CRUD (Create, Read, Update, Delete) operations using SQL Data Manipulation Language (DML) and Data Query Language (DQL).
+This lab focuses on data management within a relational database tracking a library loan system utilizing PostgreSQL (`psql`). The primary objective is processing full CRUD (Create, Read, Update, Delete) operations using SQL Data Manipulation Language (DML) and Data Query Language (DQL).
 
 ## Database Schema Model
 The database tracks information across four core relational tables:
@@ -111,7 +111,7 @@ SELECT COUNT(*) FROM loan;       -- Expected: 12
 
 ---
 
-## Section B: Data Modification Actions (CRUD Maintenance)
+## Data Modification Actions (CRUD Maintenance)
 
 ### Tuple Modification Exercises
 ```sql
