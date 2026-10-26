@@ -1,6 +1,6 @@
 # Lab 1 - Basic Internet Services and Automated SSH Configuration
 ## 📋 Project Overview
-This repository contains the deliverables for Lab 3 of CST8246 (Linux Network Services Administration). The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via iptables by Automation Server.
+The objectives of this lab are to automate the installation, configuration, and hardening of an OpenSSH server on Red Hat Enterprise Linux 8, configure an IP alias network interface, and set up robust network firewall rules via iptables by the Server.
 
 ## 🛠️ Network Configuration Details
 * **Server Primary (RED) IP:** 172.16.30.130
@@ -11,8 +11,8 @@ This repository contains the deliverables for Lab 3 of CST8246 (Linux Network Se
 ## 💾 Core Deliverables & Scripts
 
 ### 1. SSH Automation Script (setup_ssh.sh)
-* **Storage Location:** `~/setup_ssh.sh` on the **Automation VM**
-* **Description:** This script automates text-level package validation and security adjustments within /etc/ssh/sshd_config. It programmatically binds the daemon socket paths to both active system interfaces (172.16.30.130 and 172.16.32.130), disables administrative root execution over the network, completely enforces secure public key-based cryptographic authentication methods, and restricts all incoming environment connection privileges strictly to the mandatory cst8246 user profile account, completely turning off vulnerable password-based logins [CST8246].
+* **Storage Location:** `~/setup_ssh.sh` on the **Server VM**
+* **Description:** This script automates text-level package validation and security adjustments within /etc/ssh/sshd_config. It programmatically binds the socket paths to both active system interfaces (172.16.30.130 and 172.16.32.130), disables administrative root processing over the network, completely enforces secure public key-based cryptographic authentication methods, and restricts all incoming environment connection privileges strictly to the mandatory cst8246 user profile account, completely turning off vulnerable password-based logins [CST8246].
 
 
 ```bash
@@ -59,7 +59,7 @@ fi
 ```
 
 ### 2. Network Firewall Rules (FWrules.sh)
-* **Storage Location:** `~/FWrules.sh` on **Server3_SRV**
+* **Storage Location:** `~/FWrules.sh` on **Server VM**
 * **Description:** This script manages active packet filtration rules via `iptables`, allowing access from the client subnet while explicitly rejecting the alias and primary server networks.
 
 ```bash
@@ -85,7 +85,7 @@ iptables -A INPUT -s 172.16.30.0/24 -p tcp --dport 49999 -j REJECT
 # 1. ACCEPT connections from the client subnet (172.16.31.0/24)
 iptables -A INPUT -s 172.16.31.0/24 -p tcp --dport 22 -j ACCEPT
 
-# 2. REJECT connections from the server alias network (172.16.32.0/24) - MATCHES PROF'S LINE 237
+# 2. REJECT connections from the server alias network (172.16.32.0/24)
 iptables -A INPUT -s 172.16.32.0/24 -p tcp --dport 22 -j REJECT
 
 # 3. REJECT connections from the server primary subnet (172.16.30.0/24)
@@ -101,7 +101,7 @@ echo "----------------------------------------"
 iptables -L -n --line-numbers
 ```
 
-## 🔍 Verification & Testing Demonstrations
+## 🔍 Verification & Testing
 
 ### Milestone 1: Interface Binding Proof
 Verify that the `sshd` process is running successfully and actively monitoring both localized interface sockets.
@@ -116,7 +116,7 @@ sudo iptables -L INPUT -n --line-numbers
 ```
 
 ### Milestone 3: Key-Based Passwordless Authentication
-Confirming that a standard remote connection from the Client terminal (`Linux3_CLT`) to the Server Aliased IP (`172.16.32.130`) authenticates cleanly via keys without prompting for a user account password.
+Confirming that a standard remote connection from the Client terminal (`Client VM`) to the Server Aliased IP (`172.16.32.130`) authenticates cleanly via keys without prompting for a user account password.
 ```bash
 ssh cst8246@172.16.32.130
 ```
