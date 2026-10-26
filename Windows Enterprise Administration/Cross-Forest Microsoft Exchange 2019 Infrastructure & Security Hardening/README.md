@@ -159,7 +159,7 @@ Set-Mailbox -Identity "daceyd" -PrimarySmtpAddress "Doug.Dacey@dm89072.cst8342.c
 
 ---
 
-## 🔍 Pre-Demo Live Verification Protocols
+## 🔍 Live Verification Protocols
 
 Run these terminal validation strings before signaling your evaluator to begin grading:
 
