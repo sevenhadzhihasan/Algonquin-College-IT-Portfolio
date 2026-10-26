@@ -7,6 +7,10 @@ The core objective of this deployment is to validate dynamic neighbor state sync
 ---
 
 ## 🗺️ Lab Topology & Addressing
+
+![Lab Topology](l05-topology.png)
+*This is the topology l05-topology.png*
+
 The lab infrastructure uses an assigned sub-netting allocation parameter of **U = 12**.
 
 *   **CORE–EDGE Link (Point-to-Point):** `10.12.12.0/29`
@@ -73,5 +77,3 @@ router ospf 12
 *   `show ip route ospf`: Confirms successful route calculations (`O` internal and `O*E2` default injections).
 *   `tracert -d`: Conducts host data-plane boundary path tracing tests.
 
-![Lab Topology](l05-topology.png)
-*This is the topology l05-topology.png*
