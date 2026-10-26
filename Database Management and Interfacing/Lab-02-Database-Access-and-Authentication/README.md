@@ -1,6 +1,6 @@
 # Lab 02: PostgreSQL Identity, Roles, and Host-Based Authentication Matrix
 
-A technical exploration of user administration, system account matching, privilege decoupling, and Host-Based Authentication (`pg_hba.conf`) profiles within an isolated PostgreSQL 18 database engine environment.
+A technical exploration of user administration, system account matching, privilege technical, and Host-Based Authentication (`pg_hba.conf`) profiles within an isolated PostgreSQL 18 database engine environment.
 
 ## Laboratory Overview
 This lab covers database access control management, intentional troubleshooting of local authentication errors, and isolating administrative scopes. The tasks involve creating alternative system administrators, defining custom restricted network identities with specific creation permissions, and configuring authentication mechanisms across peer, trust, and md5 rules.
@@ -17,7 +17,7 @@ This lab covers database access control management, intentional troubleshooting 
 ## Technical Progression & Role Provisioning
 
 ### 1. Alternative Database Administrator Setup
-Switched execution context to system root privileges to establish a matching system operating system account named `dbadmin`. Authenticated against the primary background master cluster service account to provision the role as an official database-level superuser.
+Switched processing context to system root privileges to establish a matching system operating system account named `dbadmin`. Authenticated against the primary background master cluster service account to provision the role as an official database-level superuser.
 
 ```bash
 # Provisioning the standard system host identity account
@@ -36,7 +36,7 @@ exit
 ```
 
 ### 2. Specialized Purpose-Built Network Identity Role
-Utilized the new alternative database administrative credentials (`dbadmin`) to securely spin up a non-superuser account linked directly to student network credentials (`db_hadz0024`). The scope of this profile was explicitly isolated to have `CREATEDB` access rights.
+Utilized the new alternative database administrative credentials (`dbadmin`) to securely spin up a non-superuser account linked directly to network credentials (`db_hadz0024`). The scope of this profile was explicitly isolated to have `CREATEDB` access rights.
 
 ```bash
 # Connecting as alternative superuser to provision a restricted profile
@@ -64,7 +64,7 @@ exit
 * **Active Directive Line:** `local all all peer`
 * **Security Mechanics:** Requires a strict, direct 1-to-1 match between the invoking Linux environment user name and the targeted structural database role name.
 
-| Log ID | Invoking System Prompt & Execution Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
+| Log ID | Invoking System Prompt & Processing Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
 | :--- | :--- | :--- | :--- |
 | **`peer-1`** | `root@seven-VMware-Virtual-Platform:~# psql postgres root` | `FATAL: role "root" does not exist` | **Failure.** Operating system identity verified, but database engine lacks records matching that username. |
 | **`peer-2`** | `root@seven-VMware-Virtual-Platform:~# psql postgres dbadmin` | `FATAL: Peer authentication failed for user "dbadmin"` | **Failure.** Intercept filter blocks access because the calling Linux host user (`root`) fails to align with the target role identifier (`dbadmin`). |
@@ -76,7 +76,7 @@ exit
 * **Active Directive Line:** `local all all trust`
 * **Security Mechanics:** Disables intercept filters and credentials verification for local shell targets. Any host identity user can assert full access authority under any existing internal registry role.
 
-| Log ID | Invoking System Prompt & Execution Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
+| Log ID | Invoking System Prompt & Processing Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
 | :--- | :--- | :--- | :--- |
 | **`trust-1`** | `root@seven-VMware-Virtual-Platform:~# psql postgres root` | `FATAL: role "root" does not exist` | **Failure.** Identification checks skipped entirely, but matching role catalog rows remain missing inside database storage. |
 | **`trust-2`** | `root@seven-VMware-Virtual-Platform:~# psql postgres dbadmin` | `n/a` | **Success.** Connection allowed; standard user parameters successfully proxy straight into superuser spaces under trust allowances. |
@@ -95,15 +95,15 @@ createuser -P rolepwd
 exit
 ```
 
-| Log ID | Invoking System Prompt & Execution Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
+| Log ID | Invoking System Prompt & Processing Command | Returned DBMS Result / Error Log String | Analytical Root Cause Evaluation |
 | :--- | :--- | :--- | :--- |
 | **`md5-1`** | `dbadmin@seven-VMware-Virtual-Platform:~$ psql postgres rolepwd` | `n/a` | **Success.** Host account identity skipped. Target role verification passes when the matching secure password string payload is evaluated. |
 | **`md5-2`** | `dbadmin@seven-VMware-Virtual-Platform:~$ psql postgres dbadmin` | `FATAL: password authentication failed for user "dbadmin"` | **Failure.** Access blocked because the database user account lacks a matching password entry hash in the internal catalog, or an invalid password payload was supplied. |
 
 ---
 
-## Laboratory Environment Post-Run Cleanup
-To ensure this local testing sandbox remains flexible for upcoming structural operations exercises throughout the term, the environment has been returned to default relaxed lab security constraints:
+## Environment Post-Run Cleanup
+To ensure this local testing sandbox remains flexible for upcoming structural operations, the environment has been returned to default lab security constraints:
 
 1. Target host configuration files:
    `sudo nano /etc/postgresql/18/main/pg_hba.conf`
