@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# Script Name:  dns_slave_and_client_setup_final.sh
+# Script Name:  setup_slave.sh
 # Objective:    Unified Slave BIND Provisioning & Client Network Hardening
 # Target Node:  Slave DNS Client System / Validation Node (172.16.31.130)
 # ==============================================================================
@@ -12,7 +12,7 @@ IP_ALIAS="172.16.32.130"
 MN="130"
 
 echo "========================================================================"
-echo "Starting Lab 5 Client and Slave DNS Automated Deployment"
+echo "Client and Slave DNS Automated Deployment"
 echo "========================================================================"
 
 # --- 1. Sourcing Core Dependencies ---
