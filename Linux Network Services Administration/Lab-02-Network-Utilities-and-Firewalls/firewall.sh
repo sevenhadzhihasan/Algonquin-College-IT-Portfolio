@@ -1,8 +1,7 @@
 #!/bin/bash
 # ==============================================================================
 # Script Name:  firewall.sh
-# Description:  Configures netfilter iptables rules for CST8246 Demo environments.
-#               Controls subnet routing access restrictions for target port 49999.
+# Description: Controls subnet routing access restrictions for target port 49999.
 # ==============================================================================
 
 echo "----------------------------------------"
