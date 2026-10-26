@@ -29,13 +29,13 @@ The authoritative database architecture implements the following data types and 
 ## 🚀 Deployment Instructions
 
 ### 1. Initialize the Environment
-Log into my database terminal profile as `dbadmin` and prepare the relational database workspace:
+Log into database terminal profile as `dbadmin` and prepare the relational database workspace:
 ```sql
 CREATE DATABASE lib_hadz0024;
 \c lib_hadz0024
 ```
 
-### 2. Execute Data Definition Language (DDL) Scripts
+### 2. Processing Data Definition Language (DDL) Scripts
 Run the scripts in `psql` shell in the following sequence to preserve mandatory foreign key dependencies:
 ```text
 \i create_member.sql
