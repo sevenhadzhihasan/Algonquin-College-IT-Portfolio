@@ -1,9 +1,9 @@
 # Lab 05: Web Server Configuration and Network Automation
 
-📌 Project Overview
-This project automates the deployment, provisioning, and verification of a secure, multi-tenant enterprise web infrastructure on Red Hat Enterprise Linux (RHEL) 8/9. It integrates network interface aliasing, an authoritative **BIND DNS Master-Slave Replication Cluster**, an Apache HTTP Server utilizing both Name-Based and IP-Based Virtual Hosting, and a robust `iptables` firewall matrix to enforce strict subnet isolation.
+📌 Lab Overview
+This lab automates the deployment, provisioning, and verification of a secure, multi-tenant enterprise web infrastructure on Red Hat Enterprise Linux (RHEL) 8. It integrates network interface aliasing, an authoritative **BIND DNS Master-Slave Replication Cluster**, an Apache HTTP Server utilizing both Name-Based and IP-Based Virtual Hosting, and a robust `iptables` firewall matrix to enforce strict subnet isolation.
 
-The entire infrastructure is built using structured, production-ready Bash scripts to ensure programmatic execution, absolute consistency, and platform alignment across local enterprise networks.
+The entire infrastructure is built using structured, production-ready Bash scripts to ensure programmatic procession, absolute consistency, and platform alignment across local enterprise networks.
 
 ---
 
@@ -32,31 +32,31 @@ The entire infrastructure is built using structured, production-ready Bash scrip
 
 ---
 
-🛠️ Project Automation Architecture
+🛠️ Lab Automation Architecture
 
 The directory contains three core automated production scripts:
 
 ### 1. Server Provisioning Suite (`setup_master.sh`)
-Executes the full structural build of the Primary Master Platform:
+Process the full structural build of the Primary Master Platform:
 * **Package Synchronization:** Installs package binaries securely (`httpd`, `mod_ssl`, `bind`, `iptables`).
 * **Persistent Interface Aliasing:** Configures the `172.16.32.130` virtual network identity persistently across system reboots via NetworkManager.
 * **Database Authoring:** Writes BIND master forward zone files under proper security boundaries (`root:named`).
 * **VHost Compilation:** Generates localized Virtual Host templates and applies absolute directory permissions.
 
-### 2. Slave DNS Replication Setup (`serup_slave.sh`)
+### 2. Slave DNS Replication Setup (`setup_slave.sh`)
 Provisioned on the backup node to establish client-side redundancy:
 * **Dynamic Directory Isolation:** Spines up the secure `/var/named/slaves/` container with specialized `770` permissions and SELinux context rules (`restorecon`).
 * **Zone Synchronization:** Configures modern replication listeners to pull real-time zone transfers from the Master.
 * **Network Interconnect Routing:** Injects explicit host routes mapping to the Master's IP alias across dynamic interface pathways.
 
 ### 3. Client-Side Test Engine (`verification.sh`)
-Executed on the validation node to audit and prove operational status:
+Processed on the validation node to audit and prove operational status:
 * **Resolver Audit Verification:** Ensures local lookups trace directly through the **Slave DNS Engine** rather than bypassing it, fully validating true end-to-end zone replication.
 * **Transaction Validation:** Leverages clean `curl` lookups with connection timeouts. Includes the `-k` (insecure) flag to cleanly evaluate the data stream and bypass localized self-signed SSL warnings.
 
 ---
 
-💻 Deployment and Execution
+💻 Deployment and Procession
 
 ### Step 1: Clone and Stage the Target Environment
 Ensure your terminal session is mapped inside your cloned local repository path:
@@ -65,12 +65,12 @@ cd Algonquin-College-IT-Portfolio/"Linux Network Services Administration"/Lab-05
 ```
 
 ### Step 2: Apply System Permissions
-Before executing the deployment cycle, explicitly define executable permissions on the script files:
+Before processing the deployment cycle, explicitly define processible permissions on the script files:
 ```bash
 chmod +x dns_master_replication_final.sh dns_slave_and_client_setup_final.sh verification.sh
 ```
 
-### Step 3: Execute Master Server Automation
+### Step 3: Process Master Server Automation
 Run the primary automated blueprint on the server node (`172.16.30.130`):
 ```bash
 sudo .setup_master.sh
@@ -83,7 +83,7 @@ sudo ./setup_slave
 ```
 
 ### Step 5: Run Automated Client Validation
-Execute the verification test suite on the slave client node to prove the architecture resolves and routes successfully:
+Processs the verification test suite on the slave client node to prove the architecture resolves and routes successfully:
 ```bash
 sudo ./verification.sh
 ```
