@@ -10,7 +10,7 @@ SERVER_ALIAS_IP="172.16.32.130"
 MN="130"
 
 echo "========================================================================"
-echo "         CST8246 AUTOMATED CLIENT VALIDATION SUITE - LAB 5             "
+echo "         AUTOMATED CLIENT VALIDATION                                    "
 echo "========================================================================"
 
 # --- 1. Prevent NetworkManager from modifying client settings on reboot ---
@@ -82,5 +82,5 @@ echo -e "\n--> curl -k https://secure.example${MN}.lab"
 curl -k -s --connect-timeout 4 https://secure.example${MN}.lab || echo "  [FAIL] Connection blocked or unreachable."
 
 echo -e "\n========================================================================"
-echo "             LAB 5 CLIENT VERIFICATION PROCESS COMPLETED               "
+echo "             CLIENT VERIFICATION PROCESS COMPLETED                      "
 echo "========================================================================"
