@@ -17,8 +17,8 @@ The network consists of two Cisco IOL-XE routers and three Alpine Linux endpoint
 | **Payroll** | `hadz0024-R2` Ethernet0/1 | `SRV` eth0 | `198.18.12.96/28` |
 
 ### 📋 Layer 3 Addressing Specifications
-* Routers automatically inherit the first usable host ID within their configured subnets.
-* Linux nodes inherit the last usable host ID within their configured subnets.
+* Routers automatically recive the first usable host ID within their configured subnets.
+* Linux nodes adopt the last usable host ID within their configured subnets.
 * Default gateways point directly to the local router interface boundaries.
 
 ---
