@@ -29,6 +29,8 @@ This laboratory project provides an end-to-end automated deployment framework fo
 
 Execute these exact testing pathways sequentially from the **Linux Client VM console (`172.16.31.130`)** to audit network performance.
 
+### Please contact me for the deployment scriprs.
+
 ### Phase 1: DNS Replication & Cross-Subnet Resolution Audits
 Verify that the replicated zone datasets are active and answering queries correctly over network links:
 ```bash
