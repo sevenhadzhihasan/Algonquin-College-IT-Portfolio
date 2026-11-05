@@ -7,9 +7,8 @@
 * Deploy an automated client mapping topology using Name Service Switch (NSS) hostname resolution fallback layers.
 
 ## Repository Layout
-* `setup_ldap_server.sh` - Automated installation script for the RHEL 8.10 Master Directory Server.
-* `setup_ldap_client.sh` - Automated client integration agent and lookup switch mapping script.
 * `README.md` - Laboratory engineering documentation and validation metrics summary.
+* **Automation Scripts** (`setup_ldap_server.sh` & `setup_ldap_client.sh`) - *Available upon request for review.*
 
 ---
 
