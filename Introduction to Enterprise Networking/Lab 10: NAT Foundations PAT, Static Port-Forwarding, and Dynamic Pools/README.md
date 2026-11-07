@@ -60,7 +60,6 @@ interface GigabitEthernet0/0/1
 interface GigabitEthernet0/0/2
  description Host receiving static port-forward (Telnet)
  ip address 172.16.9.33 255.255.255.240
-
 ```
 
 ---
