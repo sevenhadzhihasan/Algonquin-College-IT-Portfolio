@@ -1,4 +1,4 @@
-# Lab 05: Cloud Infrastructure – Azure VMs, Container Instances, and Virtual Networks
+# Lab 05: Azure VMs, Container Instances, and Virtual Networks
 
 ## Course Information
 * **Course Code:** CST8342
@@ -6,7 +6,7 @@
 * **Institution:** Algonquin College
 
 ## Objective
-The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The exercise covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and orchestrating inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
+The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The lab covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
 
 ---
 
@@ -43,7 +43,7 @@ Configured and deployed a lightweight Docker container instance using standard p
 * **Container Architecture Name:** `Mycontainer-hadz0024`
 * **Region:** `East US`
 * **Image Repository:** Docker Hub Public Registry
-* **Source Path:** `://microsoft.com` (Linux Architecture)
+* **Source Path:** `http://link` (Linux Architecture)
 * **Networking Topology:** Public Endpoint
 * **Custom FQDN Assignment:** `mycontainerdnshadz0024.eastus.azurecontainer.io`
 
@@ -76,12 +76,3 @@ Two concurrent virtual machine instances were added into the private subnet infr
 3. Returned to the console on `vm1` and re-executed the network diagnostics. The targeted compute nodes successfully achieved intra-network communication with immediate response packets.
 
 ---
-
-## Deliverables & Laboratory Report Artifacts
-*(Note: Replace these placeholder paths with your actual lab report screenshots before completing your commit)*
-
-* **`Lab 05-01`**: Screenshot confirming successful external HTTP connectivity to the IIS welcome web layer using the VM's public IP address.
-* **`Lab 05-02`**: Additional verification capture showing active connectivity tracking for the VM web server environment.
-* **`Lab 05-03`**: Dashboard verification capture showing the ACI container instance profile in a `Running` state along with its assigned global FQDN.
-* **`Lab 05-04`**: Verification capture showing the fully rendered containerized web app from a standard browser using the customized URL interface.
-* **`Lab 05-05`**: Console screenshot displaying the administrative PowerShell terminal environment executing the `New-NetFirewallRule` directive successfully on `vm2`.
