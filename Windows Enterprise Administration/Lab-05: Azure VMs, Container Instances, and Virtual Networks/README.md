@@ -1,4 +1,4 @@
-# Lab 05: Cloud Infrastructure – Azure VMs, Container Instances, and Virtual Networks
+# Lab 05: Azure VMs, Container Instances, and Virtual Networks
 
 ## Course Information
 * **Course Code:** CST8342
@@ -6,7 +6,7 @@
 * **Institution:** Algonquin College
 
 ## Objective
-The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The exercise covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and orchestrating inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
+The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The exercise covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
 
 ---
 
