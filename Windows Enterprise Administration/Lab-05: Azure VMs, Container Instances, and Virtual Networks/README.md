@@ -1,4 +1,4 @@
-# Lab 05: Azure VMs, Container Instances, and Virtual Networks
+# Lab 05: Cloud Infrastructure – Azure VMs, Container Instances, and Virtual Networks
 
 ## Course Information
 * **Course Code:** CST8342
@@ -6,32 +6,33 @@
 * **Institution:** Algonquin College
 
 ## Objective
-The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The lab covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
+The objective of this lab is to explore cloud provisioning and foundational networking practices using Microsoft Azure. The exercise covers creating and connecting to a Windows Server virtual machine, hosting a functional Internet Information Services (IIS) web server, deploying a lightweight Linux container via Azure Container Instances (ACI), and orchestrating inter-VM communications across an isolated Azure Virtual Network (VNet) using custom firewall configurations.
 
 ---
 
 ## Exercise 01: Create and Configure a Virtual Machine in the Azure Portal
-Provisioned a virtual machine instance running Windows Server 2019 Datacenter using a free-tier eligible computing size, established secure remote configurations, and deployed a live public web root.
+Provisioned an advanced virtual machine instance running Windows Server 2025 Datacenter inside the Canada Central geographical zone, established secure remote configurations, and deployed a live public web root.
 
 ### Infrastructure Configuration Details
 * **Resource Group:** `myRGVM_hadz0024`
 * **Virtual Machine Name:** `myVm-hadz0024`
-* **Region:** `East US`
-* **Availability Profile:** Zone 3
-* **Image Baseline:** Windows Server 2019 Datacenter - Gen2
-* **Compute Size:** Standard_B1s (Free Tier Promotion)
+* **Region:** `Canada Central` (Zone 1)
+* **Image Baseline:** Windows (Windows Server 2025 Datacenter) - Gen2 (V2)
+* **Compute Size:** Standard_E2s_v3 (2 vcpus, 16 text GiB memory)
 * **Administrative User:** `Azureuser-hadz0024`
+* **Public IP Address:** `4.248.144.144`
+* **Virtual Network/Subnet:** `vnet-canadacentral-1/snet-canadacentral-1`
 * **Inbound Access Control:** RDP (3389), HTTP (80)
 * **Monitoring:** Boot Diagnostics Disabled
 
 ### Feature Deployment & Post-Installation Verification
 1. Established an active Remote Desktop Protocol (RDP) handshake with the virtual instance.
 2. Initialized an elevated administrative Windows PowerShell environment within the system host.
-3. Executed the server feature provisioning workflow:
+3. Executed the server feature provisioning workflow to enable Internet Information Services (IIS):
    ```powershell
    Install-WindowsFeature -name Web-Server -IncludeManagementTools
    ```
-4. Verified deployment by mapping connection requests from an external web browser to the public IP address hosted by the cloud resource.
+4. Verified deployment by mapping connection requests from an external web browser to the public IP address `4.248.144.144` hosted by the cloud resource.
 
 ---
 
@@ -40,15 +41,16 @@ Configured and deployed a lightweight Docker container instance using standard p
 
 ### Container Configuration Details
 * **Resource Group:** `myRGContainer_hadz0024`
-* **Container Architecture Name:** `Mycontainer-hadz0024`
-* **Region:** `East US`
+* **Container Architecture Name:** `mycontainer-hadz0024`
+* **Region:** `Canada Central`
+* **SKU / OS Type:** Standard / Linux
 * **Image Repository:** Docker Hub Public Registry
-* **Source Path:** `http://link` (Linux Architecture)
-* **Networking Topology:** Public Endpoint
-* **Custom FQDN Assignment:** `mycontainerdnshadz0024.eastus.azurecontainer.io`
+* **Source Path:** `://microsoft.com` (Linux Architecture)
+* **IP Address (Public):** `20.151.24.163`
+* **Custom FQDN Assignment:** `mycontainerdnshadz0024.bna2fxdfdna6fmeb.canadacentral.azurecontainer.io`
 
 ### Verification
-The container deployment successfully reached a `Running` status. Network connectivity was verified by navigating to the assigned Fully Qualified Domain Name (FQDN) to render the public static container landing application page.
+The container deployment successfully reached a `Running` status. Network connectivity was verified by navigating to the assigned Fully Qualified Domain Name (FQDN) in a standard web browser to render the public static container landing application page.
 
 ---
 
@@ -69,7 +71,7 @@ Two concurrent virtual machine instances were added into the private subnet infr
 
 ### Traffic Engineering and Diagnostic Testing
 1. Initiated a remote administration session on `vm1` and targeted `vm2` with an ICMP network probe (`ping vm2`). The baseline request timed out as expected due to standard Windows Defender stateful firewall parameters.
-2. Initiated a parallel session to `vm2` and executed an explicit local override security rule via PowerShell:
+2. Initiated a parallel session to `vm2` and executed an explicit local override security rule via PowerShell to permit inbound testing requests:
    ```powershell
    New-NetFirewallRule –DisplayName “Allow ICMPv4-In” –Protocol ICMPv4
    ```
