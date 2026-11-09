@@ -29,12 +29,12 @@ An automated Azure App Service instance running a public containerized Docker ap
 
 ## 04 - Create a VM with PowerShell
 An automated infrastructure deployment using the Cloud Shell Azure PowerShell module provisioned an isolated compute instance.
-*   **Resource Group:** `myRGPSXXXX`
-*   **Virtual Machine:** `myVMPSXXXX`
+*   **Resource Group:** `myRGPShadz0024`
+*   **Virtual Machine:** `myVMPShadz0024`
 
 ---
 
 ## 05 - Create a VM with the CLI
 Cross-platform provisioning was executed inside the Cloud Shell Bash terminal utilizing structured Azure CLI operations.
-*   **Resource Group:** `myRGCLIXXXX`
-*   **Virtual Machine:** `myVMCLIXXXX`
+*   **Resource Group:** `myRGCLIhadz0024`
+*   **Virtual Machine:** `myVMCLIhadz0024`
