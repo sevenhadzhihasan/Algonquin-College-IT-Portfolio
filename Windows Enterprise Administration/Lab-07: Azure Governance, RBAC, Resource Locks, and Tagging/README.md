@@ -19,7 +19,7 @@ Microsoft Azure governance and compliance mechanisms. By configuring Role-Based 
 * **Evidence:** `Lab07-05` *(Access denied / unauthorized error upon attempting a write operation)*.
 
 ### 2. Implement Resource Locks & Inheritance
-* **Configuration:** Created a `Delete` lock (`RGLock`) at the parent resource group level (`myRGLocks`) and deployed a general-purpose v2 storage account (`StorageV2`, `LRS`) inside it.
+* **Configuration:** Created a `Delete` lock (`RGLock`) at the parent resource group level (`myRGLocks`) and deployed a storage account (`Storage`, `LRS`) inside it.
 * **Validation:** Attempted to delete the child storage account directly. Azure blocked the action because **locks are inherited** by all child resources within a locked resource group.
 * **Cleanup:** Removed the resource group lock under **Settings > Locks** to restore deletion capabilities.
 * **Evidence:** `Lab07-03` *(Error message confirming deletion was blocked by a parent delete lock)*.
