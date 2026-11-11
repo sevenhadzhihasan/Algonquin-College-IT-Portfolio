@@ -1,7 +1,7 @@
 # Lab 07: Azure Governance, RBAC, Resource Locks, and Tagging
 
 ## Overview
-This lab demonstrates core Microsoft Azure governance and compliance mechanisms. By configuring Role-Based Access Control (RBAC), Resource Locks, and Azure Policy tagging rules, administrators can enforce the Principle of Least Privilege, protect critical infrastructure from accidental deletion, and standardize resource organization across a subscription.
+Microsoft Azure governance and compliance mechanisms. By configuring Role-Based Access Control (RBAC), Resource Locks, and Azure Policy tagging rules, administrators can enforce the Principle of Least Privilege, protect critical infrastructure from accidental deletion, and standardize resource organization across a subscription.
 
 ## Objectives
 * Configure and validate **Role-Based Access Control (RBAC)** permissions at the resource group scope.
@@ -43,4 +43,4 @@ This lab demonstrates core Microsoft Azure governance and compliance mechanisms.
 * **Azure Active Directory / Microsoft Entra ID (RBAC)**
 * **Azure Resource Manager (Resource Locks & Tags)**
 * **Azure Policy**
-* **Azure Storage Accounts (StorageV2)**
+* **Azure Storage Accounts**
