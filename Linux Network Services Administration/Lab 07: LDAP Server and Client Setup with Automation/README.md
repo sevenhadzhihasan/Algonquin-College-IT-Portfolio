@@ -84,4 +84,3 @@ ping -c 2 happy.example130.lab
   `PING happy.example130.lab (172.16.32.130) 56(84) bytes of data.`
 
 ---
-*Developed as part of the Linux Network Services Administration Portfolio portfolio.*
