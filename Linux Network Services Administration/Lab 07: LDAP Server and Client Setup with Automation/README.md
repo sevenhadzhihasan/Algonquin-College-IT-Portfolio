@@ -1,10 +1,10 @@
 # Lab 07: LDAP Server and Client Setup with Automation
 
 ## Objectives
-* Install and configur an automated, production-grade Symas OpenLDAP directory server environment.
-* Implement a central Network Configuration Information Provider via structural directory entries.
-* Secure directory transaction boundaries across multiple network segments utilizing Firewalld priority rich rules.
-* Deploy an automated client mapping topology using Name Service Switch (NSS) hostname resolution fallback layers.
+* Installed and configured an automated, production-grade Symas OpenLDAP directory server environment.
+* Implemented a central Network Configuration Information Provider via structural directory entries.
+* Securedd directory transaction boundaries across multiple network segments utilizing Firewalld priority rich rules.
+* Deployed an automated client mapping topology using Name Service Switch (NSS) hostname resolution fallback layers.
 
 ## Repository Layout
 * `README.md` - Laboratory engineering documentation and validation metrics summary.
@@ -15,7 +15,7 @@
 ## 🛠️ Script Architecture Summary
 
 ### 1. Server Deployment Topology (`setup_ldap_server.sh`)
-The master script hooks into the official Symas OpenLDAP release mirrors to bootstrap a production-ready OpenLDAP execution environment. It automatically builds a backend file-based configuration (`slapd.conf`) matching assignment criteria parameters:
+The master script automatically builds a backend file-based configuration (`slapd.conf`) matching assignment criteria parameters:
 * **Suffix Domain Context:** `dc=example130,dc=lab`
 * **Administrative Principal Principal:** `cn=ldapadm,dc=example130,dc=lab`
 * **Data Injections Context:** Dynamically loads `core`, `cosine`, `inetorgperson`, and `nis` structural schemas natively before instantiating objects.
