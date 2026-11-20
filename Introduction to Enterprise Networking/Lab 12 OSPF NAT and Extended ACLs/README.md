@@ -1,4 +1,4 @@
-# Lab 12: OSPF, NAT, and Extended ACLs — Full-Stack Policy on a Routed Edge
+# Lab 12: OSPF, NAT, and Extended ACLs - Full-Stack Policy on a Routed Edge
 
 ## Overview
 This lab implements a complete, multi-layer enterprise edge architecture on Cisco IOS-XE routers (`EDGE` and `CORE`). Starting from a VLSM-addressed baseline, the build layers single-area **OSPF** routing, **PAT (NAT Overload)** using a summarized wildcard selector, and three strategically placed **Named Extended ACLs** (`POLICY-VM`, `POLICY-PC`, and `POLICY-EXTERNAL`) to enforce host, subnet, and control-plane security policies.
